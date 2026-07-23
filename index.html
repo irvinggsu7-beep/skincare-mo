@@ -21,6 +21,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- html2canvas para descarga de Ficha de Depósito como Imagen -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     
     <script>
         tailwind.config = {
@@ -711,69 +713,89 @@
     <!-- MODAL CONFIRMACIÓN DE RESERVA Y FICHA DE PAGO -->
     <div id="modal-booking-success" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 flex items-center justify-center hidden p-4">
         <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100 text-center space-y-4 max-h-[90vh] overflow-y-auto custom-scrollbar">
-            <div class="w-14 h-14 bg-amber-100 text-amber-700 rounded-full flex items-center justify-center text-2xl mx-auto shadow-sm">
-                <i class="fa-solid fa-clock-rotate-left"></i>
-            </div>
-            <div>
-                <h3 class="text-xl font-bold font-serif-title text-slate-900">¡Reserva Registrada!</h3>
-                <p class="text-xs text-slate-500 mt-1">Tu horario ha sido bloqueado temporalmente a la espera de tu anticipo.</p>
-            </div>
-
-            <!-- Alerta de tiempo límite -->
-            <div id="voucher-time-alert" class="bg-amber-50 border border-amber-200 p-3 rounded-2xl text-xs text-amber-800 text-left font-semibold">
-                <i class="fa-solid fa-triangle-exclamation text-amber-600 mr-1"></i>
-                <span id="voucher-limit-text">Tienes 2 horas para realizar el depósito. De lo contrario, la reserva expirará.</span>
-            </div>
             
-            <!-- Resumen de Cita -->
-            <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-4 text-left text-xs space-y-2 text-slate-700">
-                <div class="flex justify-between border-b border-slate-200/60 pb-1.5">
-                    <span class="text-slate-400">Código Reserva:</span>
-                    <span id="voucher-code" class="font-mono font-bold text-spa-700">#0000</span>
+            <!-- CONTENEDOR DESCARGABLE PARA CAPTURA DE PANTALLA / IMAGEN -->
+            <div id="voucher-printable-card" class="bg-white p-4 rounded-2xl border border-slate-100 space-y-3 text-left">
+                <div class="text-center space-y-1 pb-2 border-b border-slate-100">
+                    <div class="w-12 h-12 bg-amber-100 text-amber-700 rounded-full flex items-center justify-center text-xl mx-auto shadow-sm">
+                        <i class="fa-solid fa-clock-rotate-left"></i>
+                    </div>
+                    <h3 class="text-lg font-bold font-serif-title text-slate-900">SKINCARE MO</h3>
+                    <p class="text-[11px] font-bold text-spa-600 uppercase">Ficha de Reserva & Depósito</p>
                 </div>
-                <div class="flex justify-between">
-                    <span class="text-slate-400">Servicio:</span>
-                    <span id="voucher-service" class="font-semibold text-slate-800">-</span>
+
+                <!-- Alerta de tiempo límite -->
+                <div id="voucher-time-alert" class="bg-amber-50 border border-amber-200 p-3 rounded-xl text-xs text-amber-900 font-medium leading-relaxed">
+                    <i class="fa-solid fa-triangle-exclamation text-amber-600 mr-1"></i>
+                    <span id="voucher-limit-text">Dispones de 2 horas a partir de ahora para realizar una transferencia de $150 MXN y enviar el comprobante vía WA al teléfono 7772148451.</span>
                 </div>
-                <div class="flex justify-between">
-                    <span class="text-slate-400">Fecha / Hora:</span>
-                    <span id="voucher-date" class="font-semibold text-slate-800">-</span>
+                
+                <!-- Resumen de Cita -->
+                <div class="bg-slate-50 border border-slate-200/80 rounded-xl p-3 text-xs space-y-1.5 text-slate-700">
+                    <div class="flex justify-between border-b border-slate-200/60 pb-1">
+                        <span class="text-slate-400">Código Reserva:</span>
+                        <span id="voucher-code" class="font-mono font-bold text-spa-700">#0000</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-slate-400">Servicio:</span>
+                        <span id="voucher-service" class="font-semibold text-slate-800">-</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-slate-400">Fecha / Hora:</span>
+                        <span id="voucher-date" class="font-semibold text-slate-800">-</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-slate-400">Paciente:</span>
+                        <span id="voucher-client" class="font-semibold text-slate-800">-</span>
+                    </div>
                 </div>
-                <div class="flex justify-between">
-                    <span class="text-slate-400">Paciente:</span>
-                    <span id="voucher-client" class="font-semibold text-slate-800">-</span>
+
+                <!-- Ficha de Depósito OPENBANK -->
+                <div class="bg-spa-50/80 border border-spa-200 p-3.5 rounded-xl text-xs space-y-1.5">
+                    <div class="flex items-center justify-between border-b border-spa-200 pb-1.5">
+                        <span class="font-bold text-spa-900 uppercase tracking-wider text-[10px]"><i class="fa-solid fa-building-columns mr-1"></i>Datos de Transferencia</span>
+                        <span class="bg-spa-600 text-white font-bold px-2 py-0.5 rounded-full text-[10px]">$150.00 MXN</span>
+                    </div>
+                    <div class="space-y-1 pt-0.5">
+                        <div class="flex justify-between">
+                            <span class="text-slate-500">Banco:</span>
+                            <span id="bank-name-display" class="font-bold text-slate-800">OPENBANK MX</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-500">CLABE:</span>
+                            <span id="bank-clabe-display" class="font-mono font-bold text-spa-700 select-all">646180401617525026</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-slate-500">Titular:</span>
+                            <span id="bank-holder-display" class="font-semibold text-slate-800">Mariela Olvera Quintana</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-slate-500">Referencia:</span>
+                            <span id="voucher-ref-client" class="font-bold text-amber-700">Nombre del Paciente</span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Ficha de Depósito OPENBANK -->
-            <div class="bg-spa-50/80 border border-spa-200 p-4 rounded-2xl text-left text-xs space-y-2">
-                <div class="flex items-center justify-between border-b border-spa-200 pb-2">
-                    <span class="font-bold text-spa-900 uppercase tracking-wider text-[11px]"><i class="fa-solid fa-building-columns mr-1"></i>Ficha de Depósito</span>
-                    <span class="bg-spa-600 text-white font-bold px-2.5 py-0.5 rounded-full text-[10px]">$150.00 MXN</span>
-                </div>
-                <div class="space-y-1.5 pt-1">
-                    <div class="flex justify-between">
-                        <span class="text-slate-500">Banco:</span>
-                        <span id="bank-name-display" class="font-bold text-slate-800">OPENBANK MX</span>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <span class="text-slate-500">CLABE Interbancaria:</span>
-                        <span id="bank-clabe-display" class="font-mono font-bold text-spa-700 select-all cursor-pointer">646180401617525026</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span class="text-slate-500">Titular:</span>
-                        <span id="bank-holder-display" class="font-semibold text-slate-800">Mariela Olvera Quintana</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span class="text-slate-500">Referencia Depósito:</span>
-                        <span id="voucher-ref-client" class="font-bold text-amber-700">Nombre del Paciente</span>
-                    </div>
-                </div>
-            </div>
+            <!-- BOTONES DE ACCIÓN PARA GUARDAR Y ENVIAR -->
+            <div class="space-y-2 pt-1">
+                <!-- Botón Descargar Imagen -->
+                <button onclick="downloadVoucherAsImage()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 text-xs rounded-2xl shadow-md transition flex items-center justify-center space-x-2">
+                    <i class="fa-solid fa-download"></i>
+                    <span>Descargar Ficha como Imagen</span>
+                </button>
 
-            <button onclick="closeModal('modal-booking-success'); resetBookingForm();" class="w-full bg-spa-600 hover:bg-spa-700 text-white font-bold py-3 text-xs rounded-2xl shadow-sm transition">
-                Entendido / Entendido
-            </button>
+                <!-- Botón WhatsApp Directo -->
+                <button onclick="openWhatsAppForVoucher()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 text-xs rounded-2xl shadow-md transition flex items-center justify-center space-x-2">
+                    <i class="fa-brands fa-whatsapp text-sm"></i>
+                    <span>Enviar Comprobante por WhatsApp (7772148451)</span>
+                </button>
+
+                <!-- Botón Cerrar -->
+                <button onclick="closeModal('modal-booking-success'); resetBookingForm();" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-2.5 text-xs rounded-2xl transition">
+                    Cerrar / Entendido
+                </button>
+            </div>
         </div>
     </div>
 
@@ -1345,8 +1367,8 @@
                 document.getElementById('voucher-ref-client').innerText = name;
 
                 const limitText = isPronta 
-                    ? '⚠️ Cita Pronta: Por la cercanía de tu horario se requiere pago inmediato (dispones de máximo 30 minutos para el pago y enviar el comprobante vía WA al teléfono 7772148451).' 
-                    : '⏳ Cita Regular: Dispones de 2 horas a partir de ahora para realizar tu depósito de $150 MXN y enviar el comprobante vía WA al teléfono 7772148451.';
+                    ? '⚠️ Por la cercanía de tu horario se requiere pago inmediato (dispones de máximo 30 minutos para realizar una transferencia de $150 MXN y enviar el comprobante vía WA al teléfono 7772148451).' 
+                    : '⏳ Dispones de 2 horas a partir de ahora para realizar una transferencia de $150 MXN y enviar el comprobante vía WA al teléfono 7772148451.';
                 document.getElementById('voucher-limit-text').innerText = limitText;
 
                 document.getElementById('modal-booking-success').classList.remove('hidden');
@@ -1358,6 +1380,38 @@
             } finally {
                 btn.innerHTML = '<i class="fa-solid fa-check-circle"></i><span>Confirmar Reserva de Cita</span>';
             }
+        };
+
+        window.downloadVoucherAsImage = function() {
+            const cardElem = document.getElementById('voucher-printable-card');
+            if (!cardElem) return;
+
+            showToast('Generando imagen de la Ficha...', 'info');
+
+            if (typeof html2canvas === 'undefined') {
+                showToast('Puedes tomar una captura de pantalla a tu Ficha', 'warning');
+                return;
+            }
+
+            html2canvas(cardElem, { scale: 2, backgroundColor: '#ffffff' }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `Ficha_Deposito_SKINCARE_MO.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+                showToast('¡Ficha guardada como imagen!', 'success');
+            }).catch(err => {
+                console.error("Error al descargar la ficha", err);
+                showToast('Puedes tomar una captura de pantalla a la ficha', 'warning');
+            });
+        };
+
+        window.openWhatsAppForVoucher = function() {
+            const serviceName = document.getElementById('voucher-service').innerText;
+            const dateStr = document.getElementById('voucher-date').innerText;
+            const clientName = document.getElementById('voucher-client').innerText;
+
+            const message = `Hola Mariela! Acabo de registrar mi cita en SKINCARE MO:\n- Paciente: ${clientName}\n- Servicio: ${serviceName}\n- Fecha: ${dateStr}\n\nAquí te comparto mi comprobante de transferencia de $150 MXN.`;
+            window.open(`https://wa.me/527772148451?text=${encodeURIComponent(message)}`, '_blank');
         };
 
         window.resetBookingForm = function() {
