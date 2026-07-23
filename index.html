@@ -386,6 +386,7 @@
                                             <th class="py-3 px-4">Cliente</th>
                                             <th class="py-3 px-4">Servicio</th>
                                             <th class="py-3 px-4">Fecha & Horario</th>
+                                            <th class="py-3 px-4">Registro / Límite Pago</th>
                                             <th class="py-3 px-4">Contacto</th>
                                             <th class="py-3 px-4 text-right">Acción</th>
                                         </tr>
@@ -864,7 +865,10 @@
                         clienteTelefono: b.cliente_telefono,
                         clienteEmail: b.cliente_email,
                         metodoNotif: b.metodo_notif,
-                        estado: b.estado
+                        estado: b.estado,
+                        creadoEn: b.creado_en,
+                        fechaLimitePago: b.fecha_limite_pago,
+                        tipoCita: b.tipo_cita
                     }));
                 }
 
@@ -1341,8 +1345,8 @@
                 document.getElementById('voucher-ref-client').innerText = name;
 
                 const limitText = isPronta 
-                    ? '⚠️ Cita Pronta: Por la cercanía de tu horario se requiere pago inmediato (dispones de máximo 30 minutos).' 
-                    : '⏳ Cita Regular: Dispones de 2 horas a partir de ahora para realizar tu depósito de $150 MXN.';
+                    ? '⚠️ Cita Pronta: Por la cercanía de tu horario se requiere pago inmediato (dispones de máximo 30 minutos para el pago y enviar el comprobante vía WA al teléfono 7772148451).' 
+                    : '⏳ Cita Regular: Dispones de 2 horas a partir de ahora para realizar tu depósito de $150 MXN y enviar el comprobante vía WA al teléfono 7772148451.';
                 document.getElementById('voucher-limit-text').innerText = limitText;
 
                 document.getElementById('modal-booking-success').classList.remove('hidden');
@@ -1401,6 +1405,28 @@
                     badgeHtml = `<span class="bg-rose-100 text-rose-800 text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center w-max"><i class="fa-solid fa-circle-xmark mr-1"></i>Cancelada</span>`;
                 }
 
+                let regTimeStr = b.creadoEn ? new Date(b.creadoEn).toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' }) : '-';
+                
+                let limitInfoHtml = '';
+                if (b.fechaLimitePago) {
+                    const limitDate = new Date(b.fechaLimitePago);
+                    const limitTimeStr = limitDate.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' });
+                    const diffMs = limitDate - new Date();
+                    const diffMins = Math.floor(diffMs / 60000);
+
+                    if (isPending) {
+                        if (diffMins > 0) {
+                            limitInfoHtml = `<div class="text-[10px] font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200 mt-1 flex items-center w-max"><i class="fa-solid fa-clock mr-1 animate-pulse"></i>Límite: ${limitTimeStr} (${diffMins}m restantes)</div>`;
+                        } else {
+                            limitInfoHtml = `<div class="text-[10px] font-bold text-rose-700 bg-rose-50 px-2 py-0.5 rounded-md border border-rose-200 mt-1 flex items-center w-max"><i class="fa-solid fa-triangle-exclamation mr-1"></i>Límite Vencido (${limitTimeStr})</div>`;
+                        }
+                    } else {
+                        limitInfoHtml = `<div class="text-[10px] text-slate-500 mt-0.5">Límite: ${limitTimeStr} (${b.tipoCita || 'REGULAR'})</div>`;
+                    }
+                } else {
+                    limitInfoHtml = `<div class="text-[10px] text-slate-400 mt-0.5">Límite: Estándar</div>`;
+                }
+
                 return `
                     <tr class="hover:bg-slate-50/80 transition ${isCanceled ? 'opacity-50' : ''}">
                         <td class="py-3 px-4 font-semibold text-slate-800">
@@ -1415,6 +1441,10 @@
                         <td class="py-3 px-4 font-mono text-slate-700">
                             <div>${b.fecha}</div>
                             <div class="text-[11px] font-bold text-slate-800">${b.horaInicio.substring(0,5)} - ${b.horaFin.substring(0,5)}</div>
+                        </td>
+                        <td class="py-3 px-4 text-slate-700 font-mono">
+                            <div class="text-xs font-semibold text-slate-800"><i class="fa-regular fa-clock text-slate-400 mr-1"></i>Reg: ${regTimeStr}</div>
+                            ${limitInfoHtml}
                         </td>
                         <td class="py-3 px-4 text-slate-600">
                             <div class="flex items-center space-x-1">
