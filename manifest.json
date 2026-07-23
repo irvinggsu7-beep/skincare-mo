@@ -1,0 +1,21 @@
+{
+  "short_name": "SKINCARE MO",
+  "name": "SKINCARE MO - Terapia Física, Salud y Bienestar",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "index.html",
+  "background_color": "#fcf8fa",
+  "theme_color": "#be185d",
+  "display": "standalone",
+  "orientation": "portrait"
+}

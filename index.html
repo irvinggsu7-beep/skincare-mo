@@ -1,0 +1,1635 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SKINCARE MO - Terapia Física, Salud y Bienestar</title>
+    <!-- Web App / PWA Meta -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#be185d">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="SKINCARE MO">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter & Playfair Display -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        spa: {
+                            50: '#fdf2f8',
+                            100: '#fce7f3',
+                            200: '#fbcfe8',
+                            300: '#f472b6',
+                            400: '#e879f9',
+                            500: '#ec4899',
+                            600: '#db2777',
+                            700: '#be185d',
+                            800: '#9d174d',
+                            900: '#831843',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fcf8fa;
+        }
+        .font-serif-title {
+            font-family: 'Playfair Display', serif;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="text-slate-800 antialiased min-h-screen flex flex-col justify-between selection:bg-spa-200 selection:text-spa-900">
+
+    <!-- ENCABEZADO PRINCIPAL -->
+    <header class="bg-white/90 backdrop-blur-md border-b border-slate-200/80 sticky top-0 z-40 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- LOGO / BRANDING -->
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="switchView('client')">
+                <!-- LOGO VECTORIAL IDENTICO A LA IMAGEN PROPORCIONADA -->
+                <div class="w-14 h-14 flex items-center justify-center transition-transform hover:scale-105 filter drop-shadow-md">
+                    <svg viewBox="0 0 100 100" class="w-full h-full">
+                        <defs>
+                            <linearGradient id="pinkGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#f43f5e" />
+                                <stop offset="100%" stop-color="#be185d" />
+                            </linearGradient>
+                            <path id="text-arc-logo" d="M 18,74 A 36,36 0 0,0 82,74" fill="none"/>
+                        </defs>
+                        <!-- Botón circular rosa fucsia -->
+                        <circle cx="50" cy="50" r="48" fill="url(#pinkGradient)"/>
+                        <!-- Óvalo exterior blanco inclinado -->
+                        <ellipse cx="50" cy="42" rx="21" ry="33" transform="rotate(-15 50 42)" stroke="#ffffff" stroke-width="2.5" fill="none"/>
+                        <!-- Monograma M / Cursiva con Corazón Integrado y Pulso ECG -->
+                        <path d="M 39,60 C 38,48 41,32 44,23 C 46,19 49,23 50,29 L 53,46 C 53.5,41 51,35 53,33 C 54.5,31.5 56.5,32.5 57,35 C 57.5,37.5 54,41 54,41 L 57,48 C 58,43 61,37 65,44 C 67,48 70,56 74,53" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <!-- Corazón miniatura en el pico -->
+                        <path d="M 53,35 C 51.5,32.5 48,33.5 49.5,36.5 C 51,39.5 53,41.5 53,41.5 C 53,41.5 55,39.5 56.5,36.5 C 58,33.5 54.5,32.5 53,35 Z" fill="#ffffff" stroke="#ffffff" stroke-width="0.8"/>
+                        <!-- Texto curvo inferior: SKINCARE -->
+                        <text font-family="'Inter', sans-serif" font-size="7.8" font-weight="700" fill="#ffffff" letter-spacing="1.2">
+                            <textPath href="#text-arc-logo" startOffset="50%" text-anchor="middle">
+                                SKINCARE
+                            </textPath>
+                        </text>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="font-serif-title text-2xl font-bold tracking-widest text-slate-900 uppercase">SKINCARE MO</h1>
+                    <p class="text-[10px] font-semibold text-spa-600 tracking-wider uppercase -mt-0.5">Terapia Física, Salud y Bienestar</p>
+                </div>
+            </div>
+
+            <!-- CONTROLES DE NAVEGACIÓN Y ACCESO DE VISTAS -->
+            <div class="flex items-center space-x-2 sm:space-x-4">
+                <span class="hidden sm:flex items-center space-x-1.5 text-[11px] bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-full border border-emerald-200 shadow-sm">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span class="font-semibold">Conectado en Vivo</span>
+                </span>
+
+                <button id="btn-nav-client" onclick="switchView('client')" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center space-x-2 bg-spa-50 text-spa-700 border border-spa-200 shadow-sm">
+                    <i class="fa-solid fa-calendar-check text-spa-600"></i>
+                    <span>Reservar Cita</span>
+                </button>
+                
+                <button id="btn-nav-admin" onclick="handleAdminTabClick()" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center space-x-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-transparent">
+                    <i id="nav-admin-icon" class="fa-solid fa-lock text-amber-600"></i>
+                    <span>Acceso Admin</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow w-full">
+
+        <!-- ========================================== -->
+        <!-- VISTA DE CLIENTE: RESERVA DE CITAS         -->
+        <!-- ========================================== -->
+        <section id="view-client" class="space-y-8">
+            <!-- Hero Banner -->
+            <div class="relative overflow-hidden bg-gradient-to-r from-spa-900 via-spa-800 to-spa-700 rounded-3xl p-6 sm:p-10 text-white shadow-xl shadow-spa-900/10">
+                <div class="absolute -right-10 -top-10 w-64 h-64 bg-spa-400/10 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="relative z-10 max-w-2xl space-y-3">
+                    <span class="bg-white/10 text-spa-100 text-xs font-semibold px-3 py-1 rounded-full border border-white/20 backdrop-blur-md">
+                        <i class="fa-solid fa-sparkles mr-1 text-amber-300"></i>Reserva en Tiempo Real
+                    </span>
+                    <h2 class="text-2xl sm:text-4xl font-serif-title font-bold leading-tight">Tu salud y bienestar merecen la mejor atención.</h2>
+                    <p class="text-xs sm:text-sm text-spa-100/90 leading-relaxed">
+                        Selecciona tu tratamiento preferido de SKINCARE MO, escoge la fecha y hora que mejor se adapten a ti y confirma tu cita al instante.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Paso a Paso para la Reserva -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                
+                <!-- PASO 1: Selección de Servicio -->
+                <div class="lg:col-span-7 space-y-4">
+                    <div class="flex items-center justify-between border-b border-slate-200 pb-3">
+                        <div class="flex items-center space-x-3">
+                            <span class="w-8 h-8 rounded-full bg-spa-600 text-white text-xs font-bold flex items-center justify-center shadow-md">1</span>
+                            <h3 class="font-serif-title text-lg font-bold text-slate-900">Selecciona tu Tratamiento</h3>
+                        </div>
+                        <span id="service-count-badge" class="text-xs font-medium text-slate-500 bg-slate-100 px-2.5 py-1 rounded-full">Cargando servicios...</span>
+                    </div>
+
+                    <!-- Catalogo de Servicios -->
+                    <div id="services-client-list" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <!-- Se renderiza dinámicamente -->
+                        <div class="col-span-full py-12 text-center text-slate-400">
+                            <i class="fa-solid fa-circle-notch fa-spin text-2xl text-spa-600 mb-2"></i>
+                            <p class="text-xs mt-2">Cargando catálogo del spa...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PASO 2 & 3: Fecha, Horario y Datos -->
+                <div class="lg:col-span-5 space-y-6">
+                    <!-- PASO 2: Calendario y Horarios -->
+                    <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4">
+                        <div class="flex items-center space-x-3 border-b border-slate-100 pb-3">
+                            <span class="w-8 h-8 rounded-full bg-spa-600 text-white text-xs font-bold flex items-center justify-center shadow-md">2</span>
+                            <div>
+                                <h3 class="font-serif-title text-base font-bold text-slate-900">Fecha y Horario Disponibles</h3>
+                                <p class="text-[11px] text-slate-500">Los bloques se recalculan en tiempo real</p>
+                            </div>
+                        </div>
+
+                        <!-- Selector de Fecha -->
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1.5">Fecha de la cita</label>
+                            <input type="date" id="booking-date" onchange="loadAvailableTimeSlots()" class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-3 text-xs font-medium text-slate-800 focus:ring-2 focus:ring-spa-500 focus:bg-white outline-none transition">
+                        </div>
+
+                        <!-- Selector de Horarios Disponibles -->
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <label class="block text-xs font-semibold text-slate-700">Franjas Horarias Libres</label>
+                                <span class="text-[10px] text-emerald-600 font-semibold bg-emerald-50 px-2 py-0.5 rounded-full"><i class="fa-solid fa-bolt mr-1"></i>Bloqueo Automático</span>
+                            </div>
+                            
+                            <div id="time-slots-container" class="grid grid-cols-3 gap-2 max-h-48 overflow-y-auto custom-scrollbar p-1">
+                                <p class="col-span-full text-xs text-slate-400 text-center py-6 bg-slate-50 rounded-2xl border border-dashed border-slate-200">
+                                    Selecciona un servicio primero
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PASO 3: Formulario del Cliente y Confirmación -->
+                    <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4">
+                        <div class="flex items-center space-x-3 border-b border-slate-100 pb-3">
+                            <span class="w-8 h-8 rounded-full bg-spa-600 text-white text-xs font-bold flex items-center justify-center shadow-md">3</span>
+                            <h3 class="font-serif-title text-base font-bold text-slate-900">Datos de Contacto</h3>
+                        </div>
+
+                        <!-- Resumen Seleccionado -->
+                        <div id="booking-summary-box" class="hidden bg-spa-50/80 border border-spa-200/80 p-3.5 rounded-2xl space-y-1 text-xs text-spa-900">
+                            <p class="font-bold flex justify-between">
+                                <span id="sum-service-name">-</span>
+                                <span id="sum-service-price" class="text-spa-700 font-semibold">$0</span>
+                            </p>
+                            <p class="text-[11px] text-slate-600 flex items-center space-x-2">
+                                <span><i class="fa-regular fa-clock text-spa-600 mr-1"></i><span id="sum-service-duration">0 min</span></span>
+                                <span>•</span>
+                                <span><i class="fa-regular fa-calendar text-spa-600 mr-1"></i><span id="sum-date-time">-</span></span>
+                            </p>
+                        </div>
+
+                        <form id="form-booking" onsubmit="submitBooking(event)" class="space-y-3">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Nombre Completo *</label>
+                                <input type="text" id="client-name" required placeholder="Ej. Ana María Gómez" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-800 focus:ring-2 focus:ring-spa-500 outline-none transition">
+                            </div>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-700 mb-1">Teléfono / WhatsApp *</label>
+                                    <input type="tel" id="client-phone" required placeholder="+52 55 1234 5678" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-800 focus:ring-2 focus:ring-spa-500 outline-none transition">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-700 mb-1">Correo Electrónico *</label>
+                                    <input type="email" id="client-email" required placeholder="ana@ejemplo.com" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-800 focus:ring-2 focus:ring-spa-500 outline-none transition">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Notificación preferida</label>
+                                <select id="client-notif" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-800 focus:ring-2 focus:ring-spa-500 outline-none">
+                                    <option value="whatsapp">WhatsApp / Mensaje Móvil</option>
+                                    <option value="email">Correo Electrónico</option>
+                                </select>
+                            </div>
+
+                            <button type="submit" id="btn-submit-booking" disabled class="w-full mt-2 bg-slate-300 text-slate-500 text-xs font-bold py-3.5 px-4 rounded-2xl transition flex items-center justify-center space-x-2 cursor-not-allowed">
+                                <i class="fa-solid fa-check-circle"></i>
+                                <span>Confirmar Reserva de Cita</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VISTA ADMINISTRADOR: PANEL DE CONTROL      -->
+        <!-- ========================================== -->
+        <section id="view-admin" class="space-y-6 hidden">
+            
+            <!-- Navbar Secundaria Admin -->
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white p-5 rounded-3xl shadow-sm border border-slate-200/80 gap-4">
+                <div>
+                    <div class="flex items-center space-x-2">
+                        <h2 class="text-xl font-bold font-serif-title text-slate-900">Panel de Control Administrativo</h2>
+                        <span class="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2.5 py-0.5 rounded-full flex items-center"><i class="fa-solid fa-shield-halved mr-1"></i>Autenticado</span>
+                    </div>
+                    <p class="text-xs text-slate-500 mt-0.5">Gestión integral de la agenda del spa, catálogo de servicios y configuración del sistema</p>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="openNewServiceModal()" class="bg-spa-600 hover:bg-spa-700 text-white text-xs font-semibold px-3.5 py-2.5 rounded-xl transition flex items-center space-x-2 shadow-sm">
+                        <i class="fa-solid fa-plus"></i>
+                        <span>Nuevo Servicio</span>
+                    </button>
+                    <button onclick="openNewBlockModal()" class="bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold px-3.5 py-2.5 rounded-xl transition flex items-center space-x-2 shadow-sm">
+                        <i class="fa-solid fa-ban"></i>
+                        <span>Bloquear Horario</span>
+                    </button>
+                    <button onclick="logoutAdmin()" class="bg-slate-100 hover:bg-rose-50 text-slate-700 hover:text-rose-700 border border-slate-200 text-xs font-semibold px-3.5 py-2.5 rounded-xl transition flex items-center space-x-2">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        <span>Cerrar Sesión</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Pestañas de Navegación del Panel Admin -->
+            <div class="flex border-b border-slate-200 space-x-2 sm:space-x-4 bg-white px-5 pt-3 rounded-t-3xl border-x border-t">
+                <button id="admin-subtab-btn-agenda" onclick="switchAdminSubTab('agenda')" class="pb-3 px-3 text-xs sm:text-sm font-bold text-spa-600 border-b-2 border-spa-600 flex items-center space-x-2 transition">
+                    <i class="fa-solid fa-calendar-days"></i>
+                    <span>Agenda & Citas</span>
+                </button>
+                <button id="admin-subtab-btn-services" onclick="switchAdminSubTab('services')" class="pb-3 px-3 text-xs sm:text-sm font-semibold text-slate-500 hover:text-slate-800 border-b-2 border-transparent flex items-center space-x-2 transition">
+                    <i class="fa-solid fa-list-check"></i>
+                    <span>Servicios</span>
+                </button>
+                <button id="admin-subtab-btn-security" onclick="switchAdminSubTab('security')" class="pb-3 px-3 text-xs sm:text-sm font-semibold text-slate-500 hover:text-slate-800 border-b-2 border-transparent flex items-center space-x-2 transition">
+                    <i class="fa-solid fa-gear text-amber-600"></i>
+                    <span>Configuración</span>
+                </button>
+            </div>
+
+            <!-- SUBPESTAÑA 1: AGENDA Y CITAS -->
+            <div id="admin-subcontent-agenda" class="space-y-6">
+                <!-- Métricas -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm flex items-center justify-between">
+                        <div>
+                            <span class="text-[11px] text-slate-500 font-semibold uppercase tracking-wider">Total Citas</span>
+                            <h3 id="stat-total-citas" class="text-2xl font-bold text-slate-800 mt-0.5">0</h3>
+                        </div>
+                        <div class="w-11 h-11 bg-spa-50 text-spa-600 rounded-2xl flex items-center justify-center text-lg">
+                            <i class="fa-solid fa-calendar-check"></i>
+                        </div>
+                    </div>
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm flex items-center justify-between">
+                        <div>
+                            <span class="text-[11px] text-slate-500 font-semibold uppercase tracking-wider">Ingresos Est.</span>
+                            <h3 id="stat-ingresos" class="text-2xl font-bold text-slate-800 mt-0.5">$0</h3>
+                        </div>
+                        <div class="w-11 h-11 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center text-lg">
+                            <i class="fa-solid fa-dollar-sign"></i>
+                        </div>
+                    </div>
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm flex items-center justify-between">
+                        <div>
+                            <span class="text-[11px] text-slate-500 font-semibold uppercase tracking-wider">Servicios Activos</span>
+                            <h3 id="stat-servicios-count" class="text-2xl font-bold text-slate-800 mt-0.5">0</h3>
+                        </div>
+                        <div class="w-11 h-11 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center text-lg">
+                            <i class="fa-solid fa-list-check"></i>
+                        </div>
+                    </div>
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm flex items-center justify-between">
+                        <div>
+                            <span class="text-[11px] text-slate-500 font-semibold uppercase tracking-wider">Bloqueos Activos</span>
+                            <h3 id="stat-bloqueos-count" class="text-2xl font-bold text-slate-800 mt-0.5">0</h3>
+                        </div>
+                        <div class="w-11 h-11 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center text-lg">
+                            <i class="fa-solid fa-lock"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tablas de Citas y Bloqueos -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="lg:col-span-2 space-y-6">
+                        <!-- Citas Confirmadas -->
+                        <div class="bg-white rounded-3xl border border-slate-200/80 shadow-sm overflow-hidden">
+                            <div class="p-5 border-b border-slate-200/80 flex justify-between items-center bg-slate-50/50">
+                                <h3 class="font-bold text-slate-800 text-sm flex items-center space-x-2">
+                                    <i class="fa-solid fa-calendar-day text-spa-600"></i>
+                                    <span>Citas Registradas en el Sistema</span>
+                                </h3>
+                                <span class="text-[10px] bg-spa-100 text-spa-800 px-2.5 py-1 rounded-full font-semibold">Sincronizado en Vivo</span>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left border-collapse">
+                                    <thead>
+                                        <tr class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider bg-slate-50/50 border-b border-slate-200/80">
+                                            <th class="py-3 px-4">Cliente</th>
+                                            <th class="py-3 px-4">Servicio</th>
+                                            <th class="py-3 px-4">Fecha & Horario</th>
+                                            <th class="py-3 px-4">Contacto</th>
+                                            <th class="py-3 px-4 text-right">Acción</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="table-citas-body" class="divide-y divide-slate-100 text-xs">
+                                        <!-- Citas cargadas dinámicamente -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bloqueos de Agenda -->
+                    <div class="bg-white rounded-3xl border border-slate-200/80 shadow-sm overflow-hidden">
+                        <div class="p-5 border-b border-slate-200/80 flex justify-between items-center bg-slate-50/50">
+                            <h3 class="font-bold text-slate-800 text-sm flex items-center space-x-2">
+                                <i class="fa-solid fa-ban text-amber-600"></i>
+                                <span>Bloqueos de Agenda</span>
+                            </h3>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider bg-slate-50/50 border-b border-slate-200/80">
+                                        <th class="py-3 px-4">Motivo</th>
+                                        <th class="py-3 px-4">Fecha / Hora</th>
+                                        <th class="py-3 px-4 text-right">Acción</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="table-bloqueos-body" class="divide-y divide-slate-100 text-xs">
+                                    <!-- Bloqueos cargados dinámicamente -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SUBPESTAÑA 2: SERVICIOS -->
+            <div id="admin-subcontent-services" class="space-y-6 hidden">
+                <div class="bg-white rounded-3xl border border-slate-200/80 shadow-sm overflow-hidden">
+                    <div class="p-5 border-b border-slate-200/80 bg-slate-50/50 flex justify-between items-center">
+                        <div>
+                            <h3 class="font-bold text-slate-800 text-base font-serif-title">Catálogo de Servicios Administrables</h3>
+                            <p class="text-xs text-slate-500">Crea o actualiza duraciones y precios. Todo cambio recalcula automáticamente los slots del cliente.</p>
+                        </div>
+                        <button onclick="openNewServiceModal()" class="bg-spa-600 hover:bg-spa-700 text-white text-xs font-semibold px-3.5 py-2 rounded-xl transition flex items-center space-x-2 shadow-sm">
+                            <i class="fa-solid fa-plus"></i>
+                            <span>Agregar Servicio</span>
+                        </button>
+                    </div>
+                    <div id="services-admin-list" class="divide-y divide-slate-100 p-4">
+                        <!-- Servicios administrables dinámicos -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- SUBPESTAÑA 3: SEGURIDAD & AJUSTES DE HORARIO -->
+            <div id="admin-subcontent-security" class="space-y-6 hidden">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Formulario de Cambio de Contraseña -->
+                    <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm space-y-4">
+                        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center font-bold">
+                                    <i class="fa-solid fa-key"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-slate-800 text-base font-serif-title">Contraseña de Administrador</h3>
+                                    <p class="text-xs text-slate-500">Asegura la protección del panel de control</p>
+                                </div>
+                            </div>
+                            <span class="text-[11px] bg-amber-50 text-amber-800 border border-amber-200 px-2 py-0.5 rounded-md font-semibold">Inicial: 0000</span>
+                        </div>
+
+                        <form onsubmit="changeAdminPassword(event)" class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Contraseña Actual *</label>
+                                <input type="password" id="config-old-password" placeholder="Clave actual (ej. 0000)" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-medium text-slate-800 focus:ring-2 focus:ring-amber-500 outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Nueva Contraseña *</label>
+                                <input type="password" id="config-new-password" placeholder="Nueva contraseña" required minlength="4" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-medium text-slate-800 focus:ring-2 focus:ring-amber-500 outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Confirmar Nueva Contraseña *</label>
+                                <input type="password" id="config-confirm-password" placeholder="Repite la nueva contraseña" required minlength="4" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-medium text-slate-800 focus:ring-2 focus:ring-amber-500 outline-none">
+                            </div>
+                            <button type="submit" class="w-full bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold py-3 px-4 rounded-2xl transition flex items-center justify-center space-x-2 shadow-sm">
+                                <i class="fa-solid fa-lock-keyhole text-xs"></i>
+                                <span>Guardar Nueva Contraseña</span>
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Horarios Operativos de Atención -->
+                    <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm space-y-4">
+                        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 rounded-2xl bg-spa-100 text-spa-700 flex items-center justify-center font-bold">
+                                    <i class="fa-solid fa-clock"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-slate-800 text-base font-serif-title">Horario Operativo Semanal</h3>
+                                    <p class="text-xs text-slate-500">Ajusta días de atención y rango diario habitual</p>
+                                </div>
+                            </div>
+                        </div>
+                        <form onsubmit="saveOperatingHours(event)" class="space-y-4">
+                            <!-- Días de la semana -->
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-2">Días de Atención Semanal *</label>
+                                <div class="grid grid-cols-7 gap-1 sm:gap-1.5">
+                                    <label class="flex flex-col items-center p-1.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-spa-50 cursor-pointer text-center select-none transition">
+                                        <span class="text-[10px] font-bold text-slate-700 mb-1">Lun</span>
+                                        <input type="checkbox" value="1" class="day-checkbox accent-spa-600 w-3.5 h-3.5 rounded">
+                                    </label>
+                                    <label class="flex flex-col items-center p-1.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-spa-50 cursor-pointer text-center select-none transition">
+                                        <span class="text-[10px] font-bold text-slate-700 mb-1">Mar</span>
+                                        <input type="checkbox" value="2" class="day-checkbox accent-spa-600 w-3.5 h-3.5 rounded">
+                                    </label>
+                                    <label class="flex flex-col items-center p-1.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-spa-50 cursor-pointer text-center select-none transition">
+                                        <span class="text-[10px] font-bold text-slate-700 mb-1">Mié</span>
+                                        <input type="checkbox" value="3" class="day-checkbox accent-spa-600 w-3.5 h-3.5 rounded">
+                                    </label>
+                                    <label class="flex flex-col items-center p-1.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-spa-50 cursor-pointer text-center select-none transition">
+                                        <span class="text-[10px] font-bold text-slate-700 mb-1">Jue</span>
+                                        <input type="checkbox" value="4" class="day-checkbox accent-spa-600 w-3.5 h-3.5 rounded">
+                                    </label>
+                                    <label class="flex flex-col items-center p-1.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-spa-50 cursor-pointer text-center select-none transition">
+                                        <span class="text-[10px] font-bold text-slate-700 mb-1">Vie</span>
+                                        <input type="checkbox" value="5" class="day-checkbox accent-spa-600 w-3.5 h-3.5 rounded">
+                                    </label>
+                                    <label class="flex flex-col items-center p-1.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-spa-50 cursor-pointer text-center select-none transition">
+                                        <span class="text-[10px] font-bold text-slate-700 mb-1">Sáb</span>
+                                        <input type="checkbox" value="6" class="day-checkbox accent-spa-600 w-3.5 h-3.5 rounded">
+                                    </label>
+                                    <label class="flex flex-col items-center p-1.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-spa-50 cursor-pointer text-center select-none transition">
+                                        <span class="text-[10px] font-bold text-slate-700 mb-1">Dom</span>
+                                        <input type="checkbox" value="0" class="day-checkbox accent-spa-600 w-3.5 h-3.5 rounded">
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Hora Apertura</label>
+                                    <input type="time" id="config-open-time" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 focus:ring-2 focus:ring-spa-500 outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Hora Cierre</label>
+                                    <input type="time" id="config-close-time" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 focus:ring-2 focus:ring-spa-500 outline-none">
+                                </div>
+                            </div>
+                            <button type="submit" class="w-full bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold py-3 px-4 rounded-2xl transition flex items-center justify-center space-x-2 shadow-sm">
+                                <i class="fa-solid fa-floppy-disk text-xs"></i>
+                                <span>Actualizar Horario Operativo</span>
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Bloqueos de Horarios Especiales -->
+                    <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm space-y-4">
+                        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center font-bold">
+                                    <i class="fa-solid fa-calendar-minus"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-slate-800 text-base font-serif-title">Bloqueos de Horarios Especiales</h3>
+                                    <p class="text-xs text-slate-500">Bloquea un día y horario específico (festivos/imprevistos)</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <form onsubmit="saveSpecialBlockFromConfig(event)" class="space-y-3">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Motivo / Descripción *</label>
+                                <input type="text" id="config-block-reason" required placeholder="Ej. Día Festivo / Mantenimiento" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-medium text-slate-800 focus:ring-2 focus:ring-amber-500 outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Fecha a Bloquear *</label>
+                                <input type="date" id="config-block-date" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-medium text-slate-800 focus:ring-2 focus:ring-amber-500 outline-none">
+                            </div>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Hora Inicio *</label>
+                                    <input type="time" id="config-block-start" value="09:00" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-2 text-xs font-bold text-slate-800 focus:ring-2 focus:ring-amber-500 outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Hora Fin *</label>
+                                    <input type="time" id="config-block-end" value="18:00" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-2 text-xs font-bold text-slate-800 focus:ring-2 focus:ring-amber-500 outline-none">
+                                </div>
+                            </div>
+                            <button type="submit" class="w-full bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold py-2.5 px-4 rounded-2xl transition flex items-center justify-center space-x-2 shadow-sm">
+                                <i class="fa-solid fa-ban text-xs"></i>
+                                <span>Agregar Bloqueo Especial</span>
+                            </button>
+                        </form>
+
+                        <!-- Lista Activa de Bloqueos Especiales -->
+                        <div class="pt-2 border-t border-slate-100 space-y-2">
+                            <span class="text-xs font-bold text-slate-700 block">Bloqueos Activos</span>
+                            <div id="config-blocks-list" class="max-h-36 overflow-y-auto custom-scrollbar space-y-1.5 text-xs">
+                                <!-- Se renderiza dinámicamente -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- MODAL AUTENTICACIÓN ADMINISTRADOR -->
+    <div id="modal-admin-auth" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 flex items-center justify-center hidden p-4">
+        <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-slate-100 space-y-4">
+            <div class="text-center space-y-2">
+                <div class="w-12 h-12 bg-amber-100 text-amber-700 rounded-2xl flex items-center justify-center text-xl mx-auto font-bold shadow-inner">
+                    <i class="fa-solid fa-user-lock"></i>
+                </div>
+                <h3 class="font-bold text-lg font-serif-title text-slate-800">Acceso Administrativo</h3>
+                <p class="text-xs text-slate-500">Introduce la contraseña para acceder al panel de gestión del spa.</p>
+            </div>
+
+            <form onsubmit="verifyAdminPassword(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Contraseña de Administrador</label>
+                    <input type="password" id="admin-pass-input" required placeholder="••••" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-800 focus:ring-2 focus:ring-spa-500 outline-none">
+                    <p id="admin-pass-error" class="text-[11px] text-rose-600 font-medium mt-1.5 hidden flex items-center">
+                        <i class="fa-solid fa-circle-exclamation mr-1"></i>Contraseña incorrecta. Inténtalo de nuevo.
+                    </p>
+                </div>
+
+                <div class="flex space-x-2 pt-2">
+                    <button type="button" onclick="closeModal('modal-admin-auth')" class="w-1/2 py-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition">Cancelar</button>
+                    <button type="submit" class="w-1/2 py-2.5 text-xs font-semibold bg-spa-600 hover:bg-spa-700 text-white rounded-xl shadow transition flex items-center justify-center space-x-1">
+                        <i class="fa-solid fa-key text-xs"></i>
+                        <span>Ingresar</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL NUEVO / EDITAR SERVICIO -->
+    <div id="modal-service" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100 space-y-4">
+            <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                <h3 id="modal-service-title" class="font-bold font-serif-title text-base text-slate-800">Agregar Nuevo Servicio</h3>
+                <button onclick="closeModal('modal-service')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <form onsubmit="saveServiceForm(event)" class="space-y-3">
+                <input type="hidden" id="service-id-hidden">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Nombre del Servicio *</label>
+                    <input type="text" id="service-name-input" required placeholder="Ej. Masaje Descontracturante" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:ring-2 focus:ring-spa-500 outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Descripción corta</label>
+                    <textarea id="service-desc-input" rows="2" placeholder="Detalle breve del tratamiento..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:ring-2 focus:ring-spa-500 outline-none"></textarea>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Duración (Minutos) *</label>
+                        <select id="service-duration-input" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:ring-2 focus:ring-spa-500 outline-none">
+                            <option value="30">30 minutos</option>
+                            <option value="45">45 minutos</option>
+                            <option value="60" selected>60 minutos (1 hora)</option>
+                            <option value="90">90 minutos (1.5 h)</option>
+                            <option value="120">120 minutos (2 h)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Precio ($) *</label>
+                        <input type="number" id="service-price-input" step="0.01" required placeholder="0.00" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:ring-2 focus:ring-spa-500 outline-none">
+                    </div>
+                </div>
+                <div class="pt-3 flex space-x-2">
+                    <button type="button" onclick="closeModal('modal-service')" class="w-1/2 py-2.5 text-xs font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-xl transition">Cancelar</button>
+                    <button type="submit" class="w-1/2 py-2.5 text-xs font-semibold bg-spa-600 hover:bg-spa-700 text-white rounded-xl shadow transition">Guardar Servicio</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL BLOQUEAR HORARIO -->
+    <div id="modal-block" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100 space-y-4">
+            <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                <h3 class="font-bold font-serif-title text-base text-slate-800">Bloquear Espacio en Agenda</h3>
+                <button onclick="closeModal('modal-block')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <form onsubmit="saveBlockForm(event)" class="space-y-3">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Motivo / Descripción *</label>
+                    <input type="text" id="block-reason-input" required placeholder="Ej. Mantenimiento / Día Festivo" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:ring-2 focus:ring-spa-500 outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Fecha *</label>
+                    <input type="date" id="block-date-input" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:ring-2 focus:ring-spa-500 outline-none">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Hora Inicio *</label>
+                        <input type="time" id="block-start-input" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:ring-2 focus:ring-spa-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Hora Fin *</label>
+                        <input type="time" id="block-end-input" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:ring-2 focus:ring-spa-500 outline-none">
+                    </div>
+                </div>
+                <div class="pt-3 flex space-x-2">
+                    <button type="button" onclick="closeModal('modal-block')" class="w-1/2 py-2.5 text-xs font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-xl transition">Cancelar</button>
+                    <button type="submit" class="w-1/2 py-2.5 text-xs font-semibold bg-amber-600 hover:bg-amber-700 text-white rounded-xl shadow transition">Crear Bloqueo</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL CONFIRMACIÓN DE RESERVA (COMPROBANTE CLIENTE) -->
+    <div id="modal-booking-success" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 flex items-center justify-center hidden p-4">
+        <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-slate-100 text-center space-y-4">
+            <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-3xl mx-auto shadow-sm">
+                <i class="fa-solid fa-check"></i>
+            </div>
+            <div>
+                <h3 class="text-xl font-bold font-serif-title text-slate-900">¡Cita Agendada con Éxito!</h3>
+                <p class="text-xs text-slate-500 mt-1">El horario ha sido reservado y bloqueado en nuestro sistema.</p>
+            </div>
+            
+            <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-4 text-left text-xs space-y-2 text-slate-700">
+                <div class="flex justify-between border-b border-slate-200/60 pb-1.5">
+                    <span class="text-slate-400">Código Reserva:</span>
+                    <span id="voucher-code" class="font-mono font-bold text-spa-700">#0000</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-slate-400">Servicio:</span>
+                    <span id="voucher-service" class="font-semibold text-slate-800">-</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-slate-400">Fecha / Hora:</span>
+                    <span id="voucher-date" class="font-semibold text-slate-800">-</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-slate-400">Cliente:</span>
+                    <span id="voucher-client" class="font-semibold text-slate-800">-</span>
+                </div>
+            </div>
+
+            <button onclick="closeModal('modal-booking-success'); resetBookingForm();" class="w-full bg-spa-600 hover:bg-spa-700 text-white font-bold py-3 text-xs rounded-2xl shadow-sm transition">
+                Entendido / Realizar otra reserva
+            </button>
+        </div>
+    </div>
+
+    <!-- CONTENEDOR TOAST NOTIFICACIONES -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col space-y-2 pointer-events-none"></div>
+
+    <!-- FOOTER -->
+    <footer class="bg-white border-t border-slate-200/80 py-6 text-center text-xs text-slate-400">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-2">
+            <p>© 2026 SKINCARE MO. Todos los derechos reservados.</p>
+            <div class="flex items-center space-x-2 text-[11px] text-slate-500">
+                <span class="inline-block w-2 h-2 rounded-full bg-emerald-500"></span>
+                <span>Base de Datos Sincronizada en Tiempo Real</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- SUPABASE CLIENT SCRIPT -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- LÓGICA DE LA APLICACIÓN INTEGRADA -->
+    <script type="module">
+        // ==========================================
+        // CONFIGURACIÓN DE SUPABASE
+        // ==========================================
+        const SUPABASE_URL = 'https://hmkncnlhjibebfxrmwlh.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_29TW7I65O2FstJIaMjzGjw_llJeCWxb';
+        
+        let dbClient;
+        try {
+            dbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        } catch (e) {
+            console.error("Error inicializando Supabase.", e);
+        }
+
+        let isAdminAuthenticated = false;
+
+        // Estado Reactivo Local
+        let services = [];
+        let bookings = [];
+        let blocks = [];
+        let settings = {
+            openTime: '09:00',
+            closeTime: '18:00',
+            adminPassword: '0000',
+            operatingDays: [1, 2, 3, 4, 5, 6] 
+        };
+
+        let selectedServiceId = null;
+        let selectedTimeSlot = null;
+
+        // -------------------------------------------------------------
+        // INICIALIZACIÓN Y SUSCRIPCIÓN EN TIEMPO REAL (SUPABASE)
+        // -------------------------------------------------------------
+        window.addEventListener('load', async () => {
+            // Ajustar fecha por defecto a hoy
+            const today = new Date().toISOString().split('T')[0];
+            const dateInput = document.getElementById('booking-date');
+            const configBlockDate = document.getElementById('config-block-date');
+            if (dateInput) { dateInput.value = today; dateInput.min = today; }
+            if (configBlockDate) { configBlockDate.value = today; configBlockDate.min = today; }
+
+            await fetchDataFromSupabase();
+            setupRealtimeListeners();
+        });
+
+        async function fetchDataFromSupabase() {
+            try {
+                // Fetch Services
+                const { data: servData, error: errServ } = await dbClient.from('servicios').select('*');
+                if(errServ) throw errServ;
+                if(servData) {
+                    services = servData.map(s => ({...s, duracion: s.duracion_minutos})); // Normalizar
+                }
+
+                // Fetch Bookings (Citas)
+                const { data: bookData, error: errBook } = await dbClient.from('citas').select('*');
+                if(errBook) throw errBook;
+                if(bookData) {
+                    bookings = bookData.map(b => ({
+                        id: b.id,
+                        serviceId: b.servicio_id,
+                        serviceName: b.servicio_nombre,
+                        precio: b.precio,
+                        fecha: b.fecha,
+                        horaInicio: b.hora_inicio,
+                        horaFin: b.hora_fin,
+                        clienteNombre: b.cliente_nombre,
+                        clienteTelefono: b.cliente_telefono,
+                        clienteEmail: b.cliente_email,
+                        metodoNotif: b.metodo_notif,
+                        estado: b.estado
+                    }));
+                }
+
+                // Fetch Blocks (Bloqueos)
+                const { data: blockData, error: errBlock } = await dbClient.from('bloqueos_agenda').select('*');
+                if(errBlock) throw errBlock;
+                if(blockData) {
+                    blocks = blockData.map(b => ({
+                        id: b.id,
+                        motivo: b.motivo,
+                        fecha: b.fecha,
+                        horaInicio: b.hora_inicio,
+                        horaFin: b.hora_fin
+                    }));
+                }
+
+                // Fetch Config
+                const { data: configData, error: errConfig } = await dbClient.from('configuracion').select('*').eq('id', 1).single();
+                if(errConfig && errConfig.code !== 'PGRST116') console.warn(errConfig); // Ignore row not found
+                if(configData) {
+                    settings.adminPassword = configData.admin_pin;
+                }
+
+                const { data: horasData, error: errHoras } = await dbClient.from('horarios_atencion').select('*');
+                if(errHoras) throw errHoras;
+                if(horasData && horasData.length > 0) {
+                    settings.operatingDays = horasData.filter(h => h.esta_abierto).map(h => h.dia_semana);
+                    const firstOpen = horasData.find(h => h.esta_abierto);
+                    if(firstOpen) {
+                        settings.openTime = firstOpen.hora_apertura.substring(0,5);
+                        settings.closeTime = firstOpen.hora_cierre.substring(0,5);
+                    }
+                }
+
+                updateAllUIComponents();
+
+            } catch(e) {
+                console.error("Error fetching data:", e);
+                showToast("Error BD: " + (e.message || "No se pudo conectar"), "warning");
+            }
+        }
+
+        function setupRealtimeListeners() {
+            dbClient.channel('schema-db-changes')
+              .on('postgres_changes', { event: '*', schema: 'public', table: 'citas' }, payload => {
+                  fetchDataFromSupabase(); // Refetch everything to keep it simple and synced
+              })
+              .on('postgres_changes', { event: '*', schema: 'public', table: 'servicios' }, payload => {
+                  fetchDataFromSupabase();
+              })
+              .on('postgres_changes', { event: '*', schema: 'public', table: 'bloqueos_agenda' }, payload => {
+                  fetchDataFromSupabase();
+              })
+              .on('postgres_changes', { event: '*', schema: 'public', table: 'horarios_atencion' }, payload => {
+                  fetchDataFromSupabase();
+              })
+              .subscribe();
+        }
+
+        function updateAllUIComponents() {
+            updateConfigUI();
+            renderClientServices();
+            renderAdminServices();
+            renderAdminBlocks();
+            renderAdminBookings();
+            updateAdminMetrics();
+            window.loadAvailableTimeSlots();
+            updateBookingSummary();
+        }
+
+        function updateConfigUI() {
+            const openInput = document.getElementById('config-open-time');
+            const closeInput = document.getElementById('config-close-time');
+            if (openInput) openInput.value = settings.openTime || '09:00';
+            if (closeInput) closeInput.value = settings.closeTime || '18:00';
+
+            const activeDays = settings.operatingDays || [1, 2, 3, 4, 5, 6];
+            document.querySelectorAll('.day-checkbox').forEach(cb => {
+                cb.checked = activeDays.includes(parseInt(cb.value));
+            });
+        }
+
+        // -------------------------------------------------------------
+        // NAVEGACIÓN DE VISTAS (CLIENTE VS ADMIN)
+        // -------------------------------------------------------------
+        window.switchView = function(view) {
+            const viewClient = document.getElementById('view-client');
+            const viewAdmin = document.getElementById('view-admin');
+            const btnClient = document.getElementById('btn-nav-client');
+            const btnAdmin = document.getElementById('btn-nav-admin');
+
+            if (view === 'client') {
+                viewClient.classList.remove('hidden');
+                viewAdmin.classList.add('hidden');
+
+                btnClient.className = 'px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center space-x-2 bg-spa-50 text-spa-700 border border-spa-200 shadow-sm';
+                btnAdmin.className = 'px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center space-x-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-transparent';
+            } else if (view === 'admin') {
+                if (!isAdminAuthenticated) {
+                    window.handleAdminTabClick();
+                    return;
+                }
+                viewClient.classList.add('hidden');
+                viewAdmin.classList.remove('hidden');
+
+                btnAdmin.className = 'px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center space-x-2 bg-amber-50 text-amber-800 border border-amber-200 shadow-sm';
+                btnClient.className = 'px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center space-x-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-transparent';
+            }
+        };
+
+        window.handleAdminTabClick = function() {
+            if (isAdminAuthenticated) {
+                window.switchView('admin');
+            } else {
+                document.getElementById('admin-pass-input').value = '';
+                document.getElementById('admin-pass-error').classList.add('hidden');
+                document.getElementById('modal-admin-auth').classList.remove('hidden');
+            }
+        };
+
+        window.verifyAdminPassword = function(e) {
+            e.preventDefault();
+            const inputPass = document.getElementById('admin-pass-input').value;
+            const currentPass = settings.adminPassword || '0000';
+
+            if (inputPass === currentPass) {
+                isAdminAuthenticated = true;
+                window.closeModal('modal-admin-auth');
+                
+                const icon = document.getElementById('nav-admin-icon');
+                if (icon) icon.className = 'fa-solid fa-lock-open text-emerald-600';
+
+                window.switchView('admin');
+                showToast('Acceso concedido al Panel de Administración', 'success');
+            } else {
+                document.getElementById('admin-pass-error').classList.remove('hidden');
+            }
+        };
+
+        window.logoutAdmin = function() {
+            isAdminAuthenticated = false;
+            const icon = document.getElementById('nav-admin-icon');
+            if (icon) icon.className = 'fa-solid fa-lock text-amber-600';
+            window.switchView('client');
+            showToast('Sesión de administración cerrada', 'info');
+        };
+
+        window.switchAdminSubTab = function(subTab) {
+            const btnAgenda = document.getElementById('admin-subtab-btn-agenda');
+            const btnServices = document.getElementById('admin-subtab-btn-services');
+            const btnSecurity = document.getElementById('admin-subtab-btn-security');
+
+            const contentAgenda = document.getElementById('admin-subcontent-agenda');
+            const contentServices = document.getElementById('admin-subcontent-services');
+            const contentSecurity = document.getElementById('admin-subcontent-security');
+
+            [btnAgenda, btnServices, btnSecurity].forEach(btn => {
+                if (btn) btn.className = 'pb-3 px-3 text-xs sm:text-sm font-semibold text-slate-500 hover:text-slate-800 border-b-2 border-transparent flex items-center space-x-2 transition';
+            });
+
+            contentAgenda.classList.add('hidden');
+            contentServices.classList.add('hidden');
+            contentSecurity.classList.add('hidden');
+
+            if (subTab === 'agenda') {
+                contentAgenda.classList.remove('hidden');
+                btnAgenda.className = 'pb-3 px-3 text-xs sm:text-sm font-bold text-spa-600 border-b-2 border-spa-600 flex items-center space-x-2 transition';
+            } else if (subTab === 'services') {
+                contentServices.classList.remove('hidden');
+                btnServices.className = 'pb-3 px-3 text-xs sm:text-sm font-bold text-spa-600 border-b-2 border-spa-600 flex items-center space-x-2 transition';
+            } else if (subTab === 'security') {
+                contentSecurity.classList.remove('hidden');
+                btnSecurity.className = 'pb-3 px-3 text-xs sm:text-sm font-bold text-spa-600 border-b-2 border-spa-600 flex items-center space-x-2 transition';
+            }
+        };
+
+        // -------------------------------------------------------------
+        // RENDERIZADO DE SERVICIOS (CLIENTE)
+        // -------------------------------------------------------------
+        function renderClientServices() {
+            const container = document.getElementById('services-client-list');
+            const badge = document.getElementById('service-count-badge');
+            if (!container) return;
+
+            const activeServices = services.filter(s => s.activo !== false);
+            if (badge) badge.innerText = `${activeServices.length} disponibles`;
+
+            if (activeServices.length === 0) {
+                container.innerHTML = `<p class="col-span-full text-xs text-slate-400 text-center py-6">No hay servicios disponibles temporalmente.</p>`;
+                return;
+            }
+
+            container.innerHTML = activeServices.map(s => {
+                const isSelected = s.id === selectedServiceId;
+                return `
+                    <div onclick="selectService('${s.id}')" class="cursor-pointer bg-white p-5 rounded-3xl border transition-all duration-200 relative group ${isSelected ? 'border-spa-600 ring-2 ring-spa-500/20 bg-spa-50/30 shadow-md' : 'border-slate-200 hover:border-spa-300 hover:shadow-sm'}">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-bold text-slate-900 text-sm font-serif-title">${s.nombre}</h4>
+                            <span class="font-bold text-spa-700 text-sm">$${s.precio}</span>
+                        </div>
+                        <p class="text-xs text-slate-500 line-clamp-2 mb-3">${s.descripcion || 'Sin descripción.'}</p>
+                        <div class="flex items-center justify-between text-[11px] font-semibold">
+                            <span class="text-slate-500 bg-slate-100 px-2.5 py-1 rounded-full"><i class="fa-regular fa-clock text-spa-600 mr-1"></i>${s.duracion} min</span>
+                            <span class="${isSelected ? 'text-spa-700 font-bold' : 'text-slate-400 group-hover:text-spa-600'} flex items-center">
+                                ${isSelected ? '<i class="fa-solid fa-circle-check text-spa-600 mr-1"></i>Seleccionado' : 'Elegir <i class="fa-solid fa-arrow-right ml-1"></i>'}
+                            </span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        window.selectService = function(id) {
+            selectedServiceId = id;
+            selectedTimeSlot = null;
+            renderClientServices();
+            updateBookingSummary();
+            window.loadAvailableTimeSlots();
+        };
+
+        // -------------------------------------------------------------
+        // ALGORITMO DE DISPONIBILIDAD DE HORARIOS Y BLOQUEO
+        // -------------------------------------------------------------
+        window.loadAvailableTimeSlots = function() {
+            const container = document.getElementById('time-slots-container');
+            const dateInput = document.getElementById('booking-date');
+            if (!container || !dateInput) return;
+
+            if (!selectedServiceId) {
+                container.innerHTML = `<p class="col-span-full text-xs text-slate-400 text-center py-6 bg-slate-50 rounded-2xl border border-dashed border-slate-200">Selecciona un servicio arriba primero</p>`;
+                return;
+            }
+
+            const service = services.find(s => s.id === selectedServiceId);
+            if (!service || service.activo === false) {
+                selectedServiceId = null;
+                selectedTimeSlot = null;
+                updateBookingSummary();
+                container.innerHTML = `<p class="col-span-full text-xs text-slate-400 text-center py-6 bg-slate-50 rounded-2xl border border-dashed border-slate-200">El servicio seleccionado no está disponible. Elige otro por favor.</p>`;
+                return;
+            }
+
+            const selectedDate = dateInput.value;
+            if (!selectedDate) {
+                container.innerHTML = `<p class="col-span-full text-xs text-slate-400 text-center py-6 bg-slate-50 rounded-2xl border border-dashed border-slate-200">Elige una fecha para ver horarios</p>`;
+                return;
+            }
+
+            const dateParts = selectedDate.split('-');
+            const dateObj = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+            const dayOfWeek = dateObj.getDay(); 
+            const activeDays = settings.operatingDays || [1, 2, 3, 4, 5, 6];
+            const dayNames = ['Domingos', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábados'];
+
+            if (!activeDays.includes(dayOfWeek)) {
+                container.innerHTML = `<p class="col-span-full text-xs text-amber-800 bg-amber-50 p-4 rounded-2xl text-center font-medium border border-amber-200"><i class="fa-solid fa-store-slash mr-1 text-amber-600"></i>El spa no abre los ${dayNames[dayOfWeek]}. Por favor selecciona otro día.</p>`;
+                return;
+            }
+
+            const duration = parseInt(service.duracion) || 60;
+            const openTimeStr = settings.openTime || '09:00';
+            const closeTimeStr = settings.closeTime || '18:00';
+
+            const openMinutes = timeToMinutes(openTimeStr);
+            const closeMinutes = timeToMinutes(closeTimeStr);
+
+            const slots = [];
+            for (let min = openMinutes; min + duration <= closeMinutes; min += 30) {
+                const startStr = minutesToTime(min);
+                const endStr = minutesToTime(min + duration);
+
+                const isOccupied = checkSlotOverlap(selectedDate, startStr, endStr);
+
+                slots.push({
+                    start: startStr,
+                    end: endStr,
+                    occupied: isOccupied
+                });
+            }
+
+            if (slots.length === 0) {
+                container.innerHTML = `<p class="col-span-full text-xs text-amber-700 bg-amber-50 p-4 rounded-2xl text-center">No hay horarios que se ajusten a la duración de este servicio (${duration} min) para el horario establecido (${openTimeStr} a ${closeTimeStr}).</p>`;
+                return;
+            }
+
+            const availableSlots = slots.filter(s => !s.occupied);
+            if (selectedTimeSlot && !availableSlots.some(s => s.start === selectedTimeSlot)) {
+                selectedTimeSlot = null;
+                updateBookingSummary();
+            }
+
+            container.innerHTML = slots.map(slot => {
+                if (slot.occupied) {
+                    return `
+                        <button type="button" disabled class="py-2.5 px-2 bg-slate-100 text-slate-400 text-xs font-semibold rounded-xl cursor-not-allowed border border-slate-200 opacity-60 flex flex-col items-center justify-center">
+                            <span>${slot.start}</span>
+                            <span class="text-[9px] text-rose-500 font-bold mt-0.5">Ocupado</span>
+                        </button>
+                    `;
+                }
+
+                const isSelected = selectedTimeSlot === slot.start;
+                return `
+                    <button type="button" onclick="selectSlot('${slot.start}')" class="py-2.5 px-2 text-xs font-bold rounded-xl transition border flex flex-col items-center justify-center ${isSelected ? 'bg-spa-600 text-white border-spa-600 shadow-md ring-2 ring-spa-500/20' : 'bg-white hover:bg-spa-50 text-slate-700 border-slate-200 hover:border-spa-300'}">
+                        <span>${slot.start}</span>
+                        <span class="text-[9px] ${isSelected ? 'text-spa-100' : 'text-slate-400'} font-normal">${slot.end}</span>
+                    </button>
+                `;
+            }).join('');
+        };
+
+        function checkSlotOverlap(dateStr, startStr, endStr) {
+            const slotStartMin = timeToMinutes(startStr);
+            const slotEndMin = timeToMinutes(endStr);
+
+            for (const b of bookings) {
+                if (b.fecha === dateStr && b.estado !== 'cancelada') {
+                    const bStartMin = timeToMinutes(b.horaInicio);
+                    const bEndMin = timeToMinutes(b.horaFin);
+                    if (slotStartMin < bEndMin && slotEndMin > bStartMin) {
+                        return true;
+                    }
+                }
+            }
+
+            for (const blk of blocks) {
+                if (blk.fecha === dateStr) {
+                    const blkStartMin = timeToMinutes(blk.horaInicio);
+                    const blkEndMin = timeToMinutes(blk.horaFin);
+                    if (slotStartMin < blkEndMin && slotEndMin > blkStartMin) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        window.selectSlot = function(timeStr) {
+            selectedTimeSlot = timeStr;
+            window.loadAvailableTimeSlots();
+            updateBookingSummary();
+        };
+
+        function timeToMinutes(tStr) {
+            if (!tStr) return 0;
+            const [h, m] = tStr.split(':').map(Number);
+            return (h * 60) + (m || 0);
+        }
+
+        function minutesToTime(mins) {
+            const h = Math.floor(mins / 60);
+            const m = mins % 60;
+            return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+        }
+
+        // -------------------------------------------------------------
+        // FORMULARIO DE RESERVA CLIENTE
+        // -------------------------------------------------------------
+        function updateBookingSummary() {
+            const summaryBox = document.getElementById('booking-summary-box');
+            const submitBtn = document.getElementById('btn-submit-booking');
+            const dateInput = document.getElementById('booking-date');
+
+            if (!selectedServiceId || !selectedTimeSlot) {
+                if (summaryBox) summaryBox.classList.add('hidden');
+                if (submitBtn) {
+                    submitBtn.disabled = true;
+                    submitBtn.className = "w-full mt-2 bg-slate-200 text-slate-400 text-xs font-bold py-3.5 px-4 rounded-2xl transition flex items-center justify-center space-x-2 cursor-not-allowed";
+                }
+                return;
+            }
+
+            const service = services.find(s => s.id === selectedServiceId);
+            if (!service) return;
+
+            document.getElementById('sum-service-name').innerText = service.nombre;
+            document.getElementById('sum-service-price').innerText = `$${service.precio}`;
+            document.getElementById('sum-service-duration').innerText = `${service.duracion} min`;
+            document.getElementById('sum-date-time').innerText = `${dateInput.value} a las ${selectedTimeSlot}`;
+
+            summaryBox.classList.remove('hidden');
+            submitBtn.disabled = false;
+            submitBtn.className = "w-full mt-2 bg-spa-600 hover:bg-spa-700 text-white text-xs font-bold py-3.5 px-4 rounded-2xl transition flex items-center justify-center space-x-2 shadow-md hover:shadow-lg cursor-pointer";
+        }
+
+        window.submitBooking = async function(e) {
+            e.preventDefault();
+
+            if (!selectedServiceId || !selectedTimeSlot) {
+                showToast('Por favor selecciona un servicio y un horario disponible', 'warning');
+                return;
+            }
+
+            const service = services.find(s => s.id === selectedServiceId);
+            const dateInput = document.getElementById('booking-date').value;
+            const duration = parseInt(service.duracion) || 60;
+            const horaFin = minutesToTime(timeToMinutes(selectedTimeSlot) + duration);
+
+            const name = document.getElementById('client-name').value;
+            const phone = document.getElementById('client-phone').value;
+            const email = document.getElementById('client-email').value;
+            const notif = document.getElementById('client-notif').value;
+
+            if (checkSlotOverlap(dateInput, selectedTimeSlot, horaFin)) {
+                showToast('El horario seleccionado acaba de ser reservado. Elige otro por favor.', 'warning');
+                window.loadAvailableTimeSlots();
+                return;
+            }
+
+            const bookingData = {
+                servicio_id: selectedServiceId,
+                servicio_nombre: service.nombre,
+                precio: service.precio,
+                fecha: dateInput,
+                hora_inicio: selectedTimeSlot,
+                hora_fin: horaFin,
+                cliente_nombre: name,
+                cliente_telefono: phone,
+                cliente_email: email,
+                metodo_notif: notif,
+                estado: 'confirmada'
+            };
+
+            const btn = document.getElementById('btn-submit-booking');
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i><span>Procesando...</span>';
+
+            try {
+                const { error, data } = await dbClient.from('citas').insert([bookingData]).select();
+                if(error) throw error;
+
+                document.getElementById('voucher-code').innerText = `#${data[0].id.split('-')[0].toUpperCase()}`;
+                document.getElementById('voucher-service').innerText = service.nombre;
+                document.getElementById('voucher-date').innerText = `${dateInput} @ ${selectedTimeSlot}`;
+                document.getElementById('voucher-client').innerText = name;
+
+                document.getElementById('modal-booking-success').classList.remove('hidden');
+                showToast('¡Cita confirmada correctamente!', 'success');
+                
+            } catch (err) {
+                console.log("Supabase error on booking:", err);
+                showToast('Hubo un error al reservar. Tal vez alguien te ganó el lugar.', 'warning');
+            } finally {
+                btn.innerHTML = '<i class="fa-solid fa-check-circle"></i><span>Confirmar Reserva de Cita</span>';
+            }
+        };
+
+        window.resetBookingForm = function() {
+            selectedServiceId = null;
+            selectedTimeSlot = null;
+            document.getElementById('form-booking').reset();
+            renderClientServices();
+            updateBookingSummary();
+            window.loadAvailableTimeSlots();
+        };
+
+        // -------------------------------------------------------------
+        // RENDERIZADO Y GESTIÓN EN EL PANEL ADMIN
+        // -------------------------------------------------------------
+        function renderAdminBookings() {
+            const tbody = document.getElementById('table-citas-body');
+            if (!tbody) return;
+
+            if (bookings.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="py-8 text-center text-slate-400">No hay citas registradas en el sistema.</td></tr>`;
+                return;
+            }
+
+            const sorted = [...bookings].sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+
+            tbody.innerHTML = sorted.map(b => `
+                <tr class="hover:bg-slate-50/80 transition ${b.estado==='cancelada'?'opacity-50 line-through':''}">
+                    <td class="py-3 px-4 font-semibold text-slate-800">
+                        <div>${b.clienteNombre}</div>
+                        <div class="text-[10px] text-slate-400 font-normal">${b.clienteEmail}</div>
+                    </td>
+                    <td class="py-3 px-4 text-slate-700">
+                        <span class="font-medium">${b.serviceName}</span>
+                        <div class="text-[10px] text-spa-600 font-bold">$${b.precio}</div>
+                    </td>
+                    <td class="py-3 px-4 font-mono text-slate-700">
+                        <div>${b.fecha}</div>
+                        <div class="text-[11px] font-bold text-slate-800">${b.horaInicio.substring(0,5)} - ${b.horaFin.substring(0,5)}</div>
+                    </td>
+                    <td class="py-3 px-4 text-slate-600">
+                        <div class="flex items-center space-x-1">
+                            <i class="fa-brands fa-whatsapp text-emerald-600"></i>
+                            <span>${b.clienteTelefono}</span>
+                        </div>
+                    </td>
+                    <td class="py-3 px-4 text-right">
+                        ${b.estado !== 'cancelada' ? `
+                        <button onclick="cancelBooking('${b.id}')" class="bg-rose-50 hover:bg-rose-100 text-rose-700 px-2.5 py-1 rounded-lg text-[11px] font-semibold transition">
+                            Cancelar
+                        </button>
+                        ` : '<span class="text-[10px] text-rose-600">Cancelada</span>'}
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        window.cancelBooking = async function(id) {
+            if(!confirm('¿Estás seguro de cancelar esta cita?')) return;
+            try {
+                await dbClient.from('citas').update({estado: 'cancelada'}).eq('id', id);
+                showToast('Cita cancelada y horario liberado', 'info');
+            } catch (err) {
+                console.log("Error al cancelar", err);
+            }
+        };
+
+        function renderAdminBlocks() {
+            const tbody = document.getElementById('table-bloqueos-body');
+            const configList = document.getElementById('config-blocks-list');
+
+            if (tbody) {
+                if (blocks.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="3" class="py-8 text-center text-slate-400">No hay bloqueos activos.</td></tr>`;
+                } else {
+                    tbody.innerHTML = blocks.map(bl => `
+                        <tr class="hover:bg-slate-50/80 transition">
+                            <td class="py-3 px-4 font-semibold text-slate-800">${bl.motivo}</td>
+                            <td class="py-3 px-4 text-slate-600 font-mono">
+                                <div>${bl.fecha}</div>
+                                <div class="text-[10px] text-amber-700 font-bold">${bl.horaInicio.substring(0,5)} - ${bl.horaFin.substring(0,5)}</div>
+                            </td>
+                            <td class="py-3 px-4 text-right">
+                                <button onclick="deleteBlock('${bl.id}')" class="text-slate-400 hover:text-rose-600 transition px-2 py-1">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `).join('');
+                }
+            }
+
+            if (configList) {
+                if (blocks.length === 0) {
+                    configList.innerHTML = `<p class="text-[11px] text-slate-400 py-2 text-center bg-slate-50 rounded-xl">Sin bloqueos especiales vigentes.</p>`;
+                } else {
+                    configList.innerHTML = blocks.map(bl => `
+                        <div class="bg-amber-50/70 border border-amber-200/80 p-2 rounded-xl flex items-center justify-between text-xs">
+                            <div class="pr-2">
+                                <p class="font-bold text-slate-800 leading-tight">${bl.motivo}</p>
+                                <p class="text-[10px] text-amber-800 font-medium mt-0.5"><i class="fa-regular fa-calendar mr-1"></i>${bl.fecha} • ${bl.horaInicio.substring(0,5)} a ${bl.horaFin.substring(0,5)}</p>
+                            </div>
+                            <button onclick="deleteBlock('${bl.id}')" title="Eliminar bloqueo" class="text-slate-400 hover:text-rose-600 p-1.5 transition">
+                                <i class="fa-solid fa-trash-can text-xs"></i>
+                            </button>
+                        </div>
+                    `).join('');
+                }
+            }
+        }
+
+        window.saveSpecialBlockFromConfig = async function(e) {
+            e.preventDefault();
+            const motivo = document.getElementById('config-block-reason').value;
+            const fecha = document.getElementById('config-block-date').value;
+            const horaInicio = document.getElementById('config-block-start').value;
+            const horaFin = document.getElementById('config-block-end').value;
+
+            if (timeToMinutes(horaInicio) >= timeToMinutes(horaFin)) {
+                showToast('La hora de inicio debe ser anterior a la de fin', 'warning');
+                return;
+            }
+
+            try {
+                await dbClient.from('bloqueos_agenda').insert([{
+                    motivo, fecha, hora_inicio: horaInicio, hora_fin: horaFin
+                }]);
+                document.getElementById('config-block-reason').value = '';
+                showToast('Bloqueo especial registrado', 'success');
+            } catch (err) {
+                console.log("Error al guardar bloqueo", err);
+            }
+        };
+
+        window.saveBlockForm = async function(e) {
+            e.preventDefault();
+            const motivo = document.getElementById('block-reason-input').value;
+            const fecha = document.getElementById('block-date-input').value;
+            const horaInicio = document.getElementById('block-start-input').value;
+            const horaFin = document.getElementById('block-end-input').value;
+
+            try {
+                await dbClient.from('bloqueos_agenda').insert([{
+                    motivo, fecha, hora_inicio: horaInicio, hora_fin: horaFin
+                }]);
+                window.closeModal('modal-block');
+                showToast('Bloqueo registrado en la agenda', 'success');
+            } catch (err) {
+                console.log("Error registrando bloqueo", err);
+            }
+        };
+
+        window.deleteBlock = async function(id) {
+            try {
+                await dbClient.from('bloqueos_agenda').delete().eq('id', id);
+                showToast('Bloqueo eliminado', 'info');
+            } catch (err) {
+                console.log("Error al borrar bloqueo", err);
+            }
+        };
+
+        function renderAdminServices() {
+            const container = document.getElementById('services-admin-list');
+            if (!container) return;
+
+            container.innerHTML = services.map(s => `
+                <div class="py-4 flex items-center justify-between">
+                    <div class="space-y-0.5">
+                        <div class="flex items-center space-x-2">
+                            <h4 class="font-bold text-slate-800 text-sm">${s.nombre}</h4>
+                            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${s.activo !== false ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-500'}">
+                                ${s.activo !== false ? 'Activo' : 'Pausado'}
+                            </span>
+                        </div>
+                        <p class="text-xs text-slate-500">${s.descripcion || 'Sin descripción'}</p>
+                        <div class="text-xs font-semibold text-spa-700">
+                            <span>$${s.precio}</span> • <span>${s.duracion} minutos</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button onclick="toggleServiceActive('${s.id}', ${s.activo !== false})" class="p-2 rounded-xl border text-xs font-semibold ${s.activo !== false ? 'border-amber-200 text-amber-700 bg-amber-50 hover:bg-amber-100' : 'border-emerald-200 text-emerald-700 bg-emerald-50 hover:bg-emerald-100'}">
+                            ${s.activo !== false ? '<i class="fa-solid fa-pause"></i>' : '<i class="fa-solid fa-play"></i>'}
+                        </button>
+                        <button onclick="openEditServiceModal('${s.id}')" class="p-2 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100 text-xs font-semibold">
+                            <i class="fa-solid fa-pen"></i>
+                        </button>
+                        <button onclick="deleteService('${s.id}')" class="p-2 rounded-xl border border-rose-200 text-rose-600 hover:bg-rose-50 text-xs font-semibold">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        window.toggleServiceActive = async function(id, currentStatus) {
+            try {
+                await dbClient.from('servicios').update({ activo: !currentStatus }).eq('id', id);
+                showToast('Estado del servicio actualizado', 'info');
+            } catch (err) {
+                console.log("Error actualizando servicio", err);
+            }
+        };
+
+        window.deleteService = async function(id) {
+            if(!confirm("¿Borrar servicio?")) return;
+            try {
+                await dbClient.from('servicios').delete().eq('id', id);
+                showToast('Servicio eliminado', 'info');
+            } catch (err) {
+                showToast('No se puede eliminar porque tiene citas asociadas', 'warning');
+            }
+        };
+
+        function updateAdminMetrics() {
+            const totalCitas = document.getElementById('stat-total-citas');
+            const totalIngresos = document.getElementById('stat-ingresos');
+            const totalServicios = document.getElementById('stat-servicios-count');
+            const totalBloqueos = document.getElementById('stat-bloqueos-count');
+
+            const validBookings = bookings.filter(b => b.estado !== 'cancelada');
+
+            if (totalCitas) totalCitas.innerText = validBookings.length;
+            if (totalIngresos) {
+                const suma = validBookings.reduce((acc, curr) => acc + (parseFloat(curr.precio) || 0), 0);
+                totalIngresos.innerText = `$${suma.toLocaleString()}`;
+            }
+            if (totalServicios) totalServicios.innerText = services.filter(s => s.activo !== false).length;
+            if (totalBloqueos) totalBloqueos.innerText = blocks.length;
+        }
+
+        // -------------------------------------------------------------
+        // CAMBIO DE CONTRASEÑA Y HORARIOS OPERATIVOS
+        // -------------------------------------------------------------
+        window.changeAdminPassword = async function(e) {
+            e.preventDefault();
+            const oldPassInput = document.getElementById('config-old-password').value;
+            const newPass = document.getElementById('config-new-password').value;
+            const confirmPass = document.getElementById('config-confirm-password').value;
+
+            const currentPass = settings.adminPassword || '0000';
+
+            if (oldPassInput !== currentPass) {
+                showToast('La contraseña actual es incorrecta', 'warning');
+                return;
+            }
+            if (newPass !== confirmPass) {
+                showToast('Las nuevas contraseñas no coinciden', 'warning');
+                return;
+            }
+
+            try {
+                const { error } = await dbClient.from('configuracion').upsert({ id: 1, admin_pin: newPass });
+                if (error) throw error;
+                
+                settings.adminPassword = newPass;
+                document.getElementById('config-old-password').value = '';
+                document.getElementById('config-new-password').value = '';
+                document.getElementById('config-confirm-password').value = '';
+                showToast('Contraseña de administrador actualizada con éxito', 'success');
+            } catch (err) {
+                console.log("Error actualizando contraseña", err);
+                showToast('Error al actualizar la contraseña: ' + (err.message || 'Error en Supabase'), 'warning');
+            }
+        };
+
+        window.saveOperatingHours = async function(e) {
+            e.preventDefault();
+            const openTime = document.getElementById('config-open-time').value;
+            const closeTime = document.getElementById('config-close-time').value;
+
+            const selectedDays = [];
+            document.querySelectorAll('.day-checkbox:checked').forEach(cb => {
+                selectedDays.push(parseInt(cb.value));
+            });
+
+            if (selectedDays.length === 0) {
+                showToast('Debes seleccionar al menos un día operativo', 'warning');
+                return;
+            }
+
+            try {
+                // Para mantenerlo simple, actualizamos todos los días operativos en la tabla de Supabase
+                // Primero desactivamos todos
+                await dbClient.from('horarios_atencion').update({ esta_abierto: false, hora_apertura: openTime, hora_cierre: closeTime }).neq('dia_semana', -1);
+                // Luego activamos los seleccionados
+                await dbClient.from('horarios_atencion').update({ esta_abierto: true }).in('dia_semana', selectedDays);
+                
+                showToast('Horarios y días operativos actualizados', 'success');
+            } catch (err) {
+                console.log("Error al guardar en Supabase", err);
+            }
+        };
+
+        // -------------------------------------------------------------
+        // FUNCIONES MODALES
+        // -------------------------------------------------------------
+        window.openNewServiceModal = function() {
+            document.getElementById('modal-service-title').innerText = "Agregar Nuevo Servicio";
+            document.getElementById('service-id-hidden').value = "";
+            document.getElementById('service-name-input').value = "";
+            document.getElementById('service-desc-input').value = "";
+            document.getElementById('service-duration-input').value = "60";
+            document.getElementById('service-price-input').value = "";
+            document.getElementById('modal-service').classList.remove('hidden');
+        };
+
+        window.openEditServiceModal = function(id) {
+            const s = services.find(serv => serv.id === id);
+            if (!s) return;
+            document.getElementById('modal-service-title').innerText = "Editar Servicio";
+            document.getElementById('service-id-hidden').value = s.id;
+            document.getElementById('service-name-input').value = s.nombre;
+            document.getElementById('service-desc-input').value = s.descripcion || "";
+            document.getElementById('service-duration-input').value = s.duracion;
+            document.getElementById('service-price-input').value = s.precio;
+            document.getElementById('modal-service').classList.remove('hidden');
+        };
+
+        window.saveServiceForm = async function(e) {
+            e.preventDefault();
+            const id = document.getElementById('service-id-hidden').value;
+            const nombre = document.getElementById('service-name-input').value;
+            const descripcion = document.getElementById('service-desc-input').value;
+            const duracion = parseInt(document.getElementById('service-duration-input').value);
+            const precio = parseFloat(document.getElementById('service-price-input').value);
+
+            const payload = { nombre, descripcion, duracion_minutos: duracion, precio, activo: true };
+
+            try {
+                if (id) {
+                    const { error } = await dbClient.from('servicios').update(payload).eq('id', id);
+                    if (error) throw error;
+                } else {
+                    const { error } = await dbClient.from('servicios').insert([payload]);
+                    if (error) throw error;
+                }
+                window.closeModal('modal-service');
+                showToast(id ? 'Servicio actualizado' : 'Servicio creado correctamente', 'success');
+                // Forzar refresco visual inmediato
+                await fetchDataFromSupabase();
+            } catch (err) {
+                console.log("Error guardando servicio", err);
+                showToast("Error: " + (err.message || "No se pudo guardar el servicio"), "warning");
+            }
+        };
+
+        window.closeModal = function(id) {
+            const el = document.getElementById(id);
+            if (el) el.classList.add('hidden');
+        };
+
+        // NOTIFICACIONES TOAST
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            if (!container) return;
+            const toast = document.createElement('div');
+            let bgClass = "bg-slate-800 text-white";
+            let icon = "fa-circle-info text-sky-400";
+            if (type === 'success') {
+                bgClass = "bg-emerald-900 text-emerald-50 border border-emerald-700";
+                icon = "fa-circle-check text-emerald-400";
+            } else if (type === 'warning') {
+                bgClass = "bg-amber-900 text-amber-50 border border-amber-700";
+                icon = "fa-triangle-exclamation text-amber-400";
+            }
+            toast.className = `${bgClass} pointer-events-auto px-4 py-3 rounded-2xl shadow-xl text-xs font-semibold flex items-center space-x-2 transition-all duration-300 transform translate-y-2 opacity-0`;
+            toast.innerHTML = `<i class="fa-solid ${icon} text-base"></i><span>${message}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => toast.classList.remove('translate-y-2', 'opacity-0'), 10);
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+    </script>
+</body>
+</html>
