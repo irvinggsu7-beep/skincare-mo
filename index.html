@@ -690,17 +690,24 @@
         </div>
     </div>
 
-    <!-- MODAL CONFIRMACIÓN DE RESERVA (COMPROBANTE CLIENTE) -->
+    <!-- MODAL CONFIRMACIÓN DE RESERVA Y FICHA DE PAGO -->
     <div id="modal-booking-success" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 flex items-center justify-center hidden p-4">
-        <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-slate-100 text-center space-y-4">
-            <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-3xl mx-auto shadow-sm">
-                <i class="fa-solid fa-check"></i>
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100 text-center space-y-4 max-h-[90vh] overflow-y-auto custom-scrollbar">
+            <div class="w-14 h-14 bg-amber-100 text-amber-700 rounded-full flex items-center justify-center text-2xl mx-auto shadow-sm">
+                <i class="fa-solid fa-clock-rotate-left"></i>
             </div>
             <div>
-                <h3 class="text-xl font-bold font-serif-title text-slate-900">¡Cita Agendada con Éxito!</h3>
-                <p class="text-xs text-slate-500 mt-1">El horario ha sido reservado y bloqueado en nuestro sistema.</p>
+                <h3 class="text-xl font-bold font-serif-title text-slate-900">¡Reserva Registrada!</h3>
+                <p class="text-xs text-slate-500 mt-1">Tu horario ha sido bloqueado temporalmente a la espera de tu anticipo.</p>
+            </div>
+
+            <!-- Alerta de tiempo límite -->
+            <div id="voucher-time-alert" class="bg-amber-50 border border-amber-200 p-3 rounded-2xl text-xs text-amber-800 text-left font-semibold">
+                <i class="fa-solid fa-triangle-exclamation text-amber-600 mr-1"></i>
+                <span id="voucher-limit-text">Tienes 2 horas para realizar el depósito. De lo contrario, la reserva expirará.</span>
             </div>
             
+            <!-- Resumen de Cita -->
             <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-4 text-left text-xs space-y-2 text-slate-700">
                 <div class="flex justify-between border-b border-slate-200/60 pb-1.5">
                     <span class="text-slate-400">Código Reserva:</span>
@@ -715,13 +722,39 @@
                     <span id="voucher-date" class="font-semibold text-slate-800">-</span>
                 </div>
                 <div class="flex justify-between">
-                    <span class="text-slate-400">Cliente:</span>
+                    <span class="text-slate-400">Paciente:</span>
                     <span id="voucher-client" class="font-semibold text-slate-800">-</span>
                 </div>
             </div>
 
+            <!-- Ficha de Depósito OPENBANK -->
+            <div class="bg-spa-50/80 border border-spa-200 p-4 rounded-2xl text-left text-xs space-y-2">
+                <div class="flex items-center justify-between border-b border-spa-200 pb-2">
+                    <span class="font-bold text-spa-900 uppercase tracking-wider text-[11px]"><i class="fa-solid fa-building-columns mr-1"></i>Ficha de Depósito</span>
+                    <span class="bg-spa-600 text-white font-bold px-2.5 py-0.5 rounded-full text-[10px]">$150.00 MXN</span>
+                </div>
+                <div class="space-y-1.5 pt-1">
+                    <div class="flex justify-between">
+                        <span class="text-slate-500">Banco:</span>
+                        <span id="bank-name-display" class="font-bold text-slate-800">OPENBANK MX</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-slate-500">CLABE Interbancaria:</span>
+                        <span id="bank-clabe-display" class="font-mono font-bold text-spa-700 select-all cursor-pointer">646180401617525026</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-slate-500">Titular:</span>
+                        <span id="bank-holder-display" class="font-semibold text-slate-800">Mariela Olvera Quintana</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-slate-500">Referencia Depósito:</span>
+                        <span id="voucher-ref-client" class="font-bold text-amber-700">Nombre del Paciente</span>
+                    </div>
+                </div>
+            </div>
+
             <button onclick="closeModal('modal-booking-success'); resetBookingForm();" class="w-full bg-spa-600 hover:bg-spa-700 text-white font-bold py-3 text-xs rounded-2xl shadow-sm transition">
-                Entendido / Realizar otra reserva
+                Entendido / Entendido
             </button>
         </div>
     </div>
@@ -1082,16 +1115,25 @@
             const closeMinutes = timeToMinutes(closeTimeStr);
 
             const slots = [];
+            const now = new Date();
+
             for (let min = openMinutes; min + duration <= closeMinutes; min += 30) {
                 const startStr = minutesToTime(min);
                 const endStr = minutesToTime(min + duration);
 
+                // Calcular diferencia con el tiempo actual
+                const slotDateTime = new Date(`${selectedDate}T${startStr}:00`);
+                const diffMinutes = Math.floor((slotDateTime - now) / 60000);
+
+                const tooClose = diffMinutes <= 121; // Regla de anticipación mínima (> 121 min / 2h 1min)
                 const isOccupied = checkSlotOverlap(selectedDate, startStr, endStr);
 
                 slots.push({
                     start: startStr,
                     end: endStr,
-                    occupied: isOccupied
+                    occupied: isOccupied,
+                    tooClose: tooClose,
+                    diffMinutes: diffMinutes
                 });
             }
 
@@ -1100,7 +1142,7 @@
                 return;
             }
 
-            const availableSlots = slots.filter(s => !s.occupied);
+            const availableSlots = slots.filter(s => !s.occupied && !s.tooClose);
             if (selectedTimeSlot && !availableSlots.some(s => s.start === selectedTimeSlot)) {
                 selectedTimeSlot = null;
                 updateBookingSummary();
@@ -1116,11 +1158,21 @@
                     `;
                 }
 
+                if (slot.tooClose) {
+                    return `
+                        <button type="button" disabled class="py-2.5 px-2 bg-amber-50/60 text-amber-700 text-xs font-semibold rounded-xl cursor-not-allowed border border-amber-200/80 opacity-75 flex flex-col items-center justify-center" title="Mínimo 2 horas 1 minuto de anticipación requerida">
+                            <span>${slot.start}</span>
+                            <span class="text-[9px] text-amber-700 font-bold mt-0.5"><i class="fa-solid fa-clock mr-0.5"></i>&lt; 2h 1m</span>
+                        </button>
+                    `;
+                }
+
                 const isSelected = selectedTimeSlot === slot.start;
+                const isPronta = slot.diffMinutes <= 360; // 6 horas
                 return `
                     <button type="button" onclick="selectSlot('${slot.start}')" class="py-2.5 px-2 text-xs font-bold rounded-xl transition border flex flex-col items-center justify-center ${isSelected ? 'bg-spa-600 text-white border-spa-600 shadow-md ring-2 ring-spa-500/20' : 'bg-white hover:bg-spa-50 text-slate-700 border-slate-200 hover:border-spa-300'}">
                         <span>${slot.start}</span>
-                        <span class="text-[9px] ${isSelected ? 'text-spa-100' : 'text-slate-400'} font-normal">${slot.end}</span>
+                        <span class="text-[9px] ${isSelected ? 'text-spa-100' : 'text-slate-400'} font-normal">${slot.end} ${isPronta ? '⚡' : ''}</span>
                     </button>
                 `;
             }).join('');
@@ -1218,11 +1270,27 @@
             const email = document.getElementById('client-email').value;
             const notif = document.getElementById('client-notif').value;
 
+            const now = new Date();
+            const slotDateTime = new Date(`${dateInput}T${selectedTimeSlot}:00`);
+            const diffMinutes = Math.floor((slotDateTime - now) / 60000);
+
+            if (diffMinutes <= 121) {
+                showToast('Debes agendar con al menos 2 horas y 1 minuto de anticipación', 'warning');
+                window.loadAvailableTimeSlots();
+                return;
+            }
+
             if (checkSlotOverlap(dateInput, selectedTimeSlot, horaFin)) {
                 showToast('El horario seleccionado acaba de ser reservado. Elige otro por favor.', 'warning');
                 window.loadAvailableTimeSlots();
                 return;
             }
+
+            // Lógica de tolerancia de pago (30 min vs 2 horas)
+            const isPronta = diffMinutes <= 360; // 6 horas
+            const tipoCita = isPronta ? 'PRONTA' : 'REGULAR';
+            const limitMinutes = isPronta ? 30 : 120;
+            const fechaLimitePago = new Date(now.getTime() + (limitMinutes * 60000)).toISOString();
 
             const bookingData = {
                 servicio_id: selectedServiceId,
@@ -1231,11 +1299,14 @@
                 fecha: dateInput,
                 hora_inicio: selectedTimeSlot,
                 hora_fin: horaFin,
+                fecha_hora_inicio_utc: slotDateTime.toISOString(),
+                fecha_limite_pago: fechaLimitePago,
+                tipo_cita: tipoCita,
                 cliente_nombre: name,
                 cliente_telefono: phone,
                 cliente_email: email,
                 metodo_notif: notif,
-                estado: 'confirmada'
+                estado: 'PENDIENTE_DE_PAGO'
             };
 
             const btn = document.getElementById('btn-submit-booking');
@@ -1245,17 +1316,24 @@
                 const { error, data } = await dbClient.from('citas').insert([bookingData]).select();
                 if(error) throw error;
 
+                // Llenar Ficha de Pago en Modal
                 document.getElementById('voucher-code').innerText = `#${data[0].id.split('-')[0].toUpperCase()}`;
                 document.getElementById('voucher-service').innerText = service.nombre;
                 document.getElementById('voucher-date').innerText = `${dateInput} @ ${selectedTimeSlot}`;
                 document.getElementById('voucher-client').innerText = name;
+                document.getElementById('voucher-ref-client').innerText = name;
+
+                const limitText = isPronta 
+                    ? '⚠️ Cita Pronta: Por la cercanía de tu horario se requiere pago inmediato (dispones de máximo 30 minutos).' 
+                    : '⏳ Cita Regular: Dispones de 2 horas a partir de ahora para realizar tu depósito de $150 MXN.';
+                document.getElementById('voucher-limit-text').innerText = limitText;
 
                 document.getElementById('modal-booking-success').classList.remove('hidden');
-                showToast('¡Cita confirmada correctamente!', 'success');
+                showToast('¡Reserva realizada! Revisa las instrucciones de depósito.', 'success');
                 
             } catch (err) {
                 console.log("Supabase error on booking:", err);
-                showToast('Hubo un error al reservar. Tal vez alguien te ganó el lugar.', 'warning');
+                showToast('Error al procesar la reserva: ' + (err.message || 'Inténtalo de nuevo'), 'warning');
             } finally {
                 btn.innerHTML = '<i class="fa-solid fa-check-circle"></i><span>Confirmar Reserva de Cita</span>';
             }
@@ -1284,44 +1362,83 @@
 
             const sorted = [...bookings].sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
 
-            tbody.innerHTML = sorted.map(b => `
-                <tr class="hover:bg-slate-50/80 transition ${b.estado==='cancelada'?'opacity-50 line-through':''}">
-                    <td class="py-3 px-4 font-semibold text-slate-800">
-                        <div>${b.clienteNombre}</div>
-                        <div class="text-[10px] text-slate-400 font-normal">${b.clienteEmail}</div>
-                    </td>
-                    <td class="py-3 px-4 text-slate-700">
-                        <span class="font-medium">${b.serviceName}</span>
-                        <div class="text-[10px] text-spa-600 font-bold">$${b.precio}</div>
-                    </td>
-                    <td class="py-3 px-4 font-mono text-slate-700">
-                        <div>${b.fecha}</div>
-                        <div class="text-[11px] font-bold text-slate-800">${b.horaInicio.substring(0,5)} - ${b.horaFin.substring(0,5)}</div>
-                    </td>
-                    <td class="py-3 px-4 text-slate-600">
-                        <div class="flex items-center space-x-1">
-                            <i class="fa-brands fa-whatsapp text-emerald-600"></i>
-                            <span>${b.clienteTelefono}</span>
-                        </div>
-                    </td>
-                    <td class="py-3 px-4 text-right">
-                        ${b.estado !== 'cancelada' ? `
-                        <button onclick="cancelBooking('${b.id}')" class="bg-rose-50 hover:bg-rose-100 text-rose-700 px-2.5 py-1 rounded-lg text-[11px] font-semibold transition">
-                            Cancelar
-                        </button>
-                        ` : '<span class="text-[10px] text-rose-600">Cancelada</span>'}
-                    </td>
-                </tr>
-            `).join('');
+            tbody.innerHTML = sorted.map(b => {
+                const isPending = b.estado === 'PENDIENTE_DE_PAGO';
+                const isConfirmed = b.estado === 'CONFIRMADA' || b.estado === 'confirmada';
+                const isCanceled = b.estado === 'CANCELADA' || b.estado === 'cancelada';
+
+                let badgeHtml = '';
+                if (isPending) {
+                    badgeHtml = `<span class="bg-amber-100 text-amber-800 text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center w-max"><i class="fa-solid fa-hourglass-half mr-1"></i>Pendiente Pago</span>`;
+                } else if (isConfirmed) {
+                    badgeHtml = `<span class="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center w-max"><i class="fa-solid fa-circle-check mr-1"></i>Confirmada</span>`;
+                } else if (isCanceled) {
+                    badgeHtml = `<span class="bg-rose-100 text-rose-800 text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center w-max"><i class="fa-solid fa-circle-xmark mr-1"></i>Cancelada</span>`;
+                }
+
+                return `
+                    <tr class="hover:bg-slate-50/80 transition ${isCanceled ? 'opacity-50' : ''}">
+                        <td class="py-3 px-4 font-semibold text-slate-800">
+                            <div>${b.clienteNombre}</div>
+                            <div class="text-[10px] text-slate-400 font-normal">${b.clienteEmail}</div>
+                            <div class="mt-1">${badgeHtml}</div>
+                        </td>
+                        <td class="py-3 px-4 text-slate-700">
+                            <span class="font-medium">${b.serviceName}</span>
+                            <div class="text-[10px] text-spa-600 font-bold">$${b.precio}</div>
+                        </td>
+                        <td class="py-3 px-4 font-mono text-slate-700">
+                            <div>${b.fecha}</div>
+                            <div class="text-[11px] font-bold text-slate-800">${b.horaInicio.substring(0,5)} - ${b.horaFin.substring(0,5)}</div>
+                        </td>
+                        <td class="py-3 px-4 text-slate-600">
+                            <div class="flex items-center space-x-1">
+                                <i class="fa-brands fa-whatsapp text-emerald-600"></i>
+                                <span>${b.clienteTelefono}</span>
+                            </div>
+                        </td>
+                        <td class="py-3 px-4 text-right">
+                            <div class="flex items-center justify-end space-x-1.5">
+                                ${isPending ? `
+                                    <button onclick="approveBooking('${b.id}')" title="Aprobar Pago" class="bg-emerald-600 hover:bg-emerald-700 text-white px-2.5 py-1 rounded-lg text-[11px] font-bold transition flex items-center space-x-1 shadow-sm">
+                                        <i class="fa-solid fa-check"></i>
+                                        <span>Aprobar</span>
+                                    </button>
+                                ` : ''}
+                                ${!isCanceled ? `
+                                    <button onclick="cancelBooking('${b.id}')" title="Cancelar Cita" class="bg-rose-50 hover:bg-rose-100 text-rose-700 px-2 py-1 rounded-lg text-[11px] font-semibold transition">
+                                        <i class="fa-solid fa-xmark mr-0.5"></i>Cancelar
+                                    </button>
+                                ` : '<span class="text-[10px] text-slate-400">Sin acciones</span>'}
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
         }
 
-        window.cancelBooking = async function(id) {
-            if(!confirm('¿Estás seguro de cancelar esta cita?')) return;
+        window.approveBooking = async function(id) {
             try {
-                await dbClient.from('citas').update({estado: 'cancelada'}).eq('id', id);
+                const { error } = await dbClient.from('citas').update({ estado: 'CONFIRMADA' }).eq('id', id);
+                if (error) throw error;
+                showToast('¡Pago verificado y cita confirmada!', 'success');
+                await fetchDataFromSupabase();
+            } catch (err) {
+                console.log("Error aprobando cita", err);
+                showToast('Error al confirmar pago: ' + (err.message || 'Inténtalo de nuevo'), 'warning');
+            }
+        };
+
+        window.cancelBooking = async function(id) {
+            if(!confirm('¿Estás seguro de cancelar esta cita y liberar el horario?')) return;
+            try {
+                const { error } = await dbClient.from('citas').update({ estado: 'CANCELADA' }).eq('id', id);
+                if (error) throw error;
                 showToast('Cita cancelada y horario liberado', 'info');
+                await fetchDataFromSupabase();
             } catch (err) {
                 console.log("Error al cancelar", err);
+                showToast('Error al cancelar: ' + (err.message || 'Inténtalo de nuevo'), 'warning');
             }
         };
 
