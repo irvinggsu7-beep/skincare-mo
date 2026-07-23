@@ -353,14 +353,31 @@
                 <!-- Tablas de Citas y Bloqueos -->
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <div class="lg:col-span-2 space-y-6">
-                        <!-- Citas Confirmadas -->
+                        <!-- Citas Confirmadas y Pendientes con Filtro de Calendario -->
                         <div class="bg-white rounded-3xl border border-slate-200/80 shadow-sm overflow-hidden">
-                            <div class="p-5 border-b border-slate-200/80 flex justify-between items-center bg-slate-50/50">
-                                <h3 class="font-bold text-slate-800 text-sm flex items-center space-x-2">
-                                    <i class="fa-solid fa-calendar-day text-spa-600"></i>
-                                    <span>Citas Registradas en el Sistema</span>
-                                </h3>
-                                <span class="text-[10px] bg-spa-100 text-spa-800 px-2.5 py-1 rounded-full font-semibold">Sincronizado en Vivo</span>
+                            <div class="p-4 sm:p-5 border-b border-slate-200/80 flex flex-col sm:flex-row justify-between items-start sm:items-center bg-slate-50/50 gap-3">
+                                <div>
+                                    <h3 class="font-bold text-slate-800 text-sm flex items-center space-x-2">
+                                        <i class="fa-solid fa-calendar-day text-spa-600"></i>
+                                        <span>Citas Registradas en el Sistema</span>
+                                    </h3>
+                                    <p class="text-[11px] text-slate-500 mt-0.5">Filtra por fecha o elimina registros cancelados</p>
+                                </div>
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <!-- Selector de Fecha de Calendario -->
+                                    <div class="flex items-center space-x-1 bg-white border border-slate-200 rounded-xl px-2 py-1 text-xs shadow-sm">
+                                        <i class="fa-solid fa-filter text-slate-400 text-[10px]"></i>
+                                        <input type="date" id="admin-date-filter" onchange="renderAdminBookings()" class="text-xs text-slate-700 font-semibold outline-none bg-transparent">
+                                        <button onclick="clearAdminDateFilter()" title="Ver todas las fechas" class="text-[10px] text-slate-400 hover:text-spa-600 px-1 font-bold">
+                                            <i class="fa-solid fa-xmark"></i>
+                                        </button>
+                                    </div>
+                                    <!-- Botón Purga de Citas Canceladas -->
+                                    <button onclick="purgeCanceledBookings()" title="Borrar citas canceladas definitivamente" class="bg-rose-50 hover:bg-rose-100 text-rose-700 text-[11px] font-bold px-3 py-1.5 rounded-xl transition flex items-center space-x-1 border border-rose-200">
+                                        <i class="fa-solid fa-trash-can text-xs"></i>
+                                        <span>Limpiar Canceladas</span>
+                                    </button>
+                                </div>
                             </div>
                             <div class="overflow-x-auto">
                                 <table class="w-full text-left border-collapse">
@@ -1351,16 +1368,24 @@
         // -------------------------------------------------------------
         // RENDERIZADO Y GESTIÓN EN EL PANEL ADMIN
         // -------------------------------------------------------------
-        function renderAdminBookings() {
+        window.renderAdminBookings = function() {
             const tbody = document.getElementById('table-citas-body');
+            const dateFilterInput = document.getElementById('admin-date-filter');
             if (!tbody) return;
 
-            if (bookings.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="py-8 text-center text-slate-400">No hay citas registradas en el sistema.</td></tr>`;
+            let filteredBookings = [...bookings];
+            const filterDate = dateFilterInput ? dateFilterInput.value : '';
+
+            if (filterDate) {
+                filteredBookings = filteredBookings.filter(b => b.fecha === filterDate);
+            }
+
+            if (filteredBookings.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="py-8 text-center text-slate-400">${filterDate ? 'No hay citas registradas para la fecha seleccionada ('+filterDate+').' : 'No hay citas registradas en el sistema.'}</td></tr>`;
                 return;
             }
 
-            const sorted = [...bookings].sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+            const sorted = filteredBookings.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
 
             tbody.innerHTML = sorted.map(b => {
                 const isPending = b.estado === 'PENDIENTE_DE_PAGO';
@@ -1409,13 +1434,23 @@
                                     <button onclick="cancelBooking('${b.id}')" title="Cancelar Cita" class="bg-rose-50 hover:bg-rose-100 text-rose-700 px-2 py-1 rounded-lg text-[11px] font-semibold transition">
                                         <i class="fa-solid fa-xmark mr-0.5"></i>Cancelar
                                     </button>
-                                ` : '<span class="text-[10px] text-slate-400">Sin acciones</span>'}
+                                ` : `
+                                    <button onclick="purgeBooking('${b.id}')" title="Eliminar registro cancelado definitivamente" class="bg-rose-100 hover:bg-rose-200 text-rose-800 p-1.5 rounded-lg text-xs transition">
+                                        <i class="fa-solid fa-trash-can"></i>
+                                    </button>
+                                `}
                             </div>
                         </td>
                     </tr>
                 `;
             }).join('');
-        }
+        };
+
+        window.clearAdminDateFilter = function() {
+            const dateFilterInput = document.getElementById('admin-date-filter');
+            if (dateFilterInput) dateFilterInput.value = '';
+            window.renderAdminBookings();
+        };
 
         window.approveBooking = async function(id) {
             try {
@@ -1439,6 +1474,37 @@
             } catch (err) {
                 console.log("Error al cancelar", err);
                 showToast('Error al cancelar: ' + (err.message || 'Inténtalo de nuevo'), 'warning');
+            }
+        };
+
+        window.purgeBooking = async function(id) {
+            if(!confirm('¿Deseas borrar definitivamente este registro cancelado?')) return;
+            try {
+                const { error } = await dbClient.from('citas').delete().eq('id', id);
+                if (error) throw error;
+                showToast('Registro eliminado de la base de datos', 'info');
+                await fetchDataFromSupabase();
+            } catch (err) {
+                console.log("Error eliminando registro", err);
+                showToast('Error al eliminar: ' + (err.message || 'Inténtalo de nuevo'), 'warning');
+            }
+        };
+
+        window.purgeCanceledBookings = async function() {
+            const canceledCount = bookings.filter(b => b.estado === 'CANCELADA' || b.estado === 'cancelada').length;
+            if (canceledCount === 0) {
+                showToast('No hay citas canceladas para eliminar', 'info');
+                return;
+            }
+            if(!confirm(`¿Deseas eliminar definitivamente las ${canceledCount} citas canceladas?`)) return;
+            try {
+                const { error } = await dbClient.from('citas').delete().or('estado.eq.CANCELADA,estado.eq.cancelada');
+                if (error) throw error;
+                showToast(`Se eliminaron ${canceledCount} citas canceladas`, 'success');
+                await fetchDataFromSupabase();
+            } catch (err) {
+                console.log("Error en purga masiva", err);
+                showToast('Error al limpiar citas: ' + (err.message || 'Inténtalo de nuevo'), 'warning');
             }
         };
 
