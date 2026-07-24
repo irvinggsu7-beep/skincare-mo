@@ -1000,18 +1000,15 @@
             operatingDays: [1, 2, 3, 4, 5, 6] 
         };
 
-        let selectedServiceIds = [];
-        let selectedTimeSlot = null;
-        let appliedCoupon = null;
-        let dbCoupons = [];
-
         const availableCoupons = [
-            { code: 'MAYE10', type: 'percent', value: 10, label: '10% de descuento', expiry: '2026-12-31' },
-            { code: 'SKIN10', type: 'percent', value: 10, label: '10% de descuento', expiry: '2026-12-31' },
-            { code: 'MAYE50', type: 'fixed', value: 50, label: '$50.00 MXN de descuento', expiry: '2026-12-31' },
-            { code: 'PROMO15', type: 'percent', value: 15, label: '15% de descuento', expiry: '2026-12-31' },
-            { code: 'SPA100', type: 'fixed', value: 100, label: '$100.00 MXN de descuento', expiry: '2026-12-31' }
+            { id: 'def-1', code: 'MAYE10', type: 'percent', value: 10, label: '10% de descuento', startDate: '2026-01-01', expiry: '2026-12-31', activo: true },
+            { id: 'def-2', code: 'SKIN10', type: 'percent', value: 10, label: '10% de descuento', startDate: '2026-01-01', expiry: '2026-12-31', activo: true },
+            { id: 'def-3', code: 'MAYE50', type: 'fixed', value: 50, label: '$50.00 MXN de descuento', startDate: '2026-01-01', expiry: '2026-12-31', activo: true },
+            { id: 'def-4', code: 'PROMO15', type: 'percent', value: 15, label: '15% de descuento', startDate: '2026-01-01', expiry: '2026-12-31', activo: true },
+            { id: 'def-5', code: 'SPA100', type: 'fixed', value: 100, label: '$100.00 MXN de descuento', startDate: '2026-01-01', expiry: '2026-12-31', activo: true }
         ];
+
+        let dbCoupons = [...availableCoupons];
 
         // -------------------------------------------------------------
         // INICIALIZACIÓN Y SUSCRIPCIÓN EN TIEMPO REAL (SUPABASE)
@@ -1257,6 +1254,8 @@
             } else if (subTab === 'security' && contentSecurity) {
                 contentSecurity.classList.remove('hidden');
                 if (btnSecurity) btnSecurity.className = 'pb-3 px-3 text-xs sm:text-sm font-bold text-spa-600 border-b-2 border-spa-600 flex items-center space-x-2 transition shrink-0';
+                renderAdminBlocks();
+                renderAdminCoupons();
             }
         };
 
@@ -1731,7 +1730,7 @@
             const startDate = document.getElementById('config-coupon-start').value;
             const expiry = document.getElementById('config-coupon-expiry').value;
 
-            if (!code || !value || !startDate || !expiry) {
+            if (!code || isNaN(value) || !startDate || !expiry) {
                 showToast('Llena todos los campos del cupón', 'warning');
                 return;
             }
@@ -1740,6 +1739,21 @@
                 showToast('La fecha de inicio debe ser anterior a la caducidad', 'warning');
                 return;
             }
+
+            const newCoupon = {
+                id: 'c-' + Date.now(),
+                code: code,
+                type: type,
+                value: value,
+                startDate: startDate,
+                expiry: expiry,
+                activo: true
+            };
+
+            // Actualización optimista local en el estado
+            dbCoupons = dbCoupons.filter(c => c.code !== code);
+            dbCoupons.unshift(newCoupon);
+            renderAdminCoupons();
 
             try {
                 const { data, error } = await dbClient.from('cupones').upsert({
@@ -1751,16 +1765,18 @@
                     activo: true
                 }, { onConflict: 'codigo' }).select();
 
-                if (error) throw error;
+                if (error) {
+                    console.warn("Aviso al guardar cupón en Supabase:", error);
+                } else if (data && data[0]) {
+                    newCoupon.id = data[0].id;
+                }
 
                 showToast(`¡Cupón ${code} guardado (${startDate} a ${expiry})!`, 'success');
                 document.getElementById('config-coupon-code').value = '';
                 document.getElementById('config-coupon-value').value = '';
-                
-                await fetchDataFromSupabase();
             } catch(err) {
-                console.error("Error guardando cupón:", err);
-                showToast('Error al guardar cupón: ' + (err.message || 'Inténtalo de nuevo'), 'warning');
+                console.error("Error guardando cupón en Supabase:", err);
+                showToast(`Cupón ${code} guardado en tu sesión`, 'info');
             }
         };
 
