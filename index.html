@@ -973,7 +973,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
     <!-- LÓGICA DE LA APLICACIÓN INTEGRADA -->
-    <script type="module">
+    <script>
         // ==========================================
         // CONFIGURACIÓN DE SUPABASE
         // ==========================================
@@ -1052,13 +1052,12 @@
                 if (localStorage.getItem('skincare_logo_url')) settings.logoUrl = localStorage.getItem('skincare_logo_url');
             } catch(e){}
 
-            // 1. Cargar Servicios (Máximo 6 activos)
+            // 1. Cargar Servicios desde Supabase
             try {
                 const { data: servData, error: errServ } = await dbClient.from('servicios').select('*');
                 if (!errServ && servData && servData.length > 0) {
                     services = servData
                         .filter(s => s && s.activo !== false)
-                        .slice(0, 6)
                         .map(s => ({
                             id: String(s.id),
                             nombre: String(s.nombre || 'Tratamiento Spa'),
@@ -1474,7 +1473,7 @@
             if (!Array.isArray(selectedServiceIds)) selectedServiceIds = [];
 
             try {
-                const activeServices = (services || []).filter(s => s && s.activo !== false).slice(0, 6);
+                const activeServices = (services || []).filter(s => s && s.activo !== false);
                 if (badge) badge.innerText = `${activeServices.length} disponibles (Máx. 2 por cita)`;
 
                 if (activeServices.length === 0) {
