@@ -503,13 +503,29 @@
                         </div>
 
                         <div>
-                            <label class="block text-xs font-semibold text-slate-700 mb-1">URL o Enlace de la Imagen del Logo (Opcional)</label>
-                            <input type="url" id="profile-logo-url" placeholder="https://ejemplo.com/mi-logo.png (Deja vacío para usar el logo rosa vectorial predeterminado)" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-800 focus:ring-2 focus:ring-spa-500 outline-none">
-                            <p class="text-[11px] text-slate-400 mt-1">Si dejas este campo vacío, se mostrará el logotipo rosa vectorial predeterminado.</p>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Imagen del Logo de la Empresa (Opcional)</label>
+                            <div class="flex items-center space-x-4 bg-slate-50 border border-slate-200 rounded-2xl p-3.5">
+                                <div id="logo-preview-box" class="w-14 h-14 rounded-full border border-slate-200 bg-white flex items-center justify-center overflow-hidden shrink-0 shadow-sm">
+                                    <!-- Vista previa dinámica del logo -->
+                                </div>
+                                <div class="space-y-1.5 flex-grow">
+                                    <input type="file" id="profile-logo-file" accept="image/*" onchange="handleLogoFileSelect(event)" class="hidden">
+                                    <div class="flex flex-wrap gap-2">
+                                        <button type="button" onclick="document.getElementById('profile-logo-file').click()" class="bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 font-semibold px-3 py-1.5 rounded-xl text-xs flex items-center space-x-1.5 shadow-sm transition cursor-pointer">
+                                            <i class="fa-solid fa-upload text-spa-600"></i>
+                                            <span>Subir Imagen desde mi Equipo</span>
+                                        </button>
+                                        <button type="button" onclick="resetDefaultLogo()" class="text-rose-600 hover:text-rose-800 text-xs font-semibold px-2 py-1.5 rounded-xl hover:bg-rose-50 transition cursor-pointer">
+                                            <i class="fa-solid fa-rotate-left mr-1"></i>Usar Logo Rosa Predeterminado
+                                        </button>
+                                    </div>
+                                    <p class="text-[10px] text-slate-400">Selecciona una imagen PNG, JPG o SVG desde tu computadora. Si deseas volver al logo predeterminado, presiona "Usar Logo Rosa".</p>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="pt-2">
-                            <button type="submit" class="bg-spa-600 hover:bg-spa-700 text-white font-bold px-6 py-3 text-xs rounded-2xl shadow-md transition flex items-center space-x-2">
+                            <button type="submit" class="bg-spa-600 hover:bg-spa-700 text-white font-bold px-6 py-3 text-xs rounded-2xl shadow-md transition flex items-center space-x-2 cursor-pointer">
                                 <i class="fa-solid fa-floppy-disk"></i>
                                 <span>Guardar Cambios de Perfil</span>
                             </button>
@@ -520,7 +536,7 @@
 
             <!-- SUBPESTAÑA 3: SEGURIDAD & AJUSTES DE HORARIO -->
             <div id="admin-subcontent-security" class="space-y-6 hidden">
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
                     <!-- Formulario de Cambio de Contraseña -->
                     <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm space-y-4">
                         <div class="flex items-center justify-between border-b border-slate-100 pb-3">
@@ -630,8 +646,8 @@
                                     <i class="fa-solid fa-calendar-minus"></i>
                                 </div>
                                 <div>
-                                    <h3 class="font-bold text-slate-800 text-base font-serif-title">Bloqueos de Horarios Especiales</h3>
-                                    <p class="text-xs text-slate-500">Bloquea un día y horario específico (festivos/imprevistos)</p>
+                                    <h3 class="font-bold text-slate-800 text-base font-serif-title">Bloqueos Especiales</h3>
+                                    <p class="text-xs text-slate-500">Bloquea un día/horario específico (festivos)</p>
                                 </div>
                             </div>
                         </div>
@@ -667,7 +683,10 @@
                             <div id="config-blocks-list" class="max-h-36 overflow-y-auto custom-scrollbar space-y-1.5 text-xs">
                                 <!-- Se renderiza dinámicamente -->
                             </div>
-                    <!-- Gestión de Cupones de Descuento & Vigencias -->
+                        </div>
+                    </div>
+
+                    <!-- Gestión de Cupones de Descuento & Vigencias (Inicio y Caducidad) -->
                     <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm space-y-4">
                         <div class="flex items-center justify-between border-b border-slate-100 pb-3">
                             <div class="flex items-center space-x-3">
@@ -676,7 +695,7 @@
                                 </div>
                                 <div>
                                     <h3 class="font-bold text-slate-800 text-base font-serif-title">Cupones & Vigencias</h3>
-                                    <p class="text-xs text-slate-500">Crea cupones, porcentajes y fechas límite</p>
+                                    <p class="text-xs text-slate-500">Define fecha inicio, caducidad y descuento</p>
                                 </div>
                             </div>
                         </div>
@@ -689,19 +708,25 @@
                             <div class="grid grid-cols-2 gap-2">
                                 <div>
                                     <label class="block text-xs font-semibold text-slate-600 mb-1">Tipo *</label>
-                                    <select id="config-coupon-type" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-2 text-xs font-semibold text-slate-800 focus:ring-2 focus:ring-spa-500 outline-none">
+                                    <select id="config-coupon-type" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-2 py-2 text-xs font-semibold text-slate-800 focus:ring-2 focus:ring-spa-500 outline-none">
                                         <option value="percent">Porcentaje (%)</option>
                                         <option value="fixed">Monto Fijo ($)</option>
                                     </select>
                                 </div>
                                 <div>
                                     <label class="block text-xs font-semibold text-slate-600 mb-1">Valor *</label>
-                                    <input type="number" id="config-coupon-value" required min="1" step="0.01" placeholder="Ej. 15" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-2 text-xs font-bold text-slate-800 focus:ring-2 focus:ring-spa-500 outline-none">
+                                    <input type="number" id="config-coupon-value" required min="1" step="0.01" placeholder="Ej. 15" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-2 py-2 text-xs font-bold text-slate-800 focus:ring-2 focus:ring-spa-500 outline-none">
                                 </div>
                             </div>
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-700 mb-1">Fecha Límite / Vigencia *</label>
-                                <input type="date" id="config-coupon-expiry" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-medium text-slate-800 focus:ring-2 focus:ring-spa-500 outline-none">
+                            <div class="grid grid-cols-2 gap-2">
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-700 mb-1">Fecha Inicio *</label>
+                                    <input type="date" id="config-coupon-start" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-2 py-2 text-xs font-medium text-slate-800 focus:ring-2 focus:ring-spa-500 outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-700 mb-1">Caducidad *</label>
+                                    <input type="date" id="config-coupon-expiry" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-2 py-2 text-xs font-medium text-slate-800 focus:ring-2 focus:ring-spa-500 outline-none">
+                                </div>
                             </div>
                             <button type="submit" class="w-full bg-spa-600 hover:bg-spa-700 text-white text-xs font-bold py-2.5 px-4 rounded-2xl transition flex items-center justify-center space-x-2 shadow-sm">
                                 <i class="fa-solid fa-plus text-xs"></i>
@@ -996,8 +1021,13 @@
             const today = new Date().toISOString().split('T')[0];
             const dateInput = document.getElementById('booking-date');
             const configBlockDate = document.getElementById('config-block-date');
+            const configCouponStart = document.getElementById('config-coupon-start');
+            const configCouponExpiry = document.getElementById('config-coupon-expiry');
+
             if (dateInput) { dateInput.value = today; dateInput.min = today; }
             if (configBlockDate) { configBlockDate.value = today; configBlockDate.min = today; }
+            if (configCouponStart) { configCouponStart.value = today; }
+            if (configCouponExpiry) { configCouponExpiry.value = '2026-12-31'; }
 
             await fetchDataFromSupabase();
             setupRealtimeListeners();
@@ -1061,13 +1091,14 @@
 
                 // Fetch Cupones
                 const { data: coupData, error: errCoup } = await dbClient.from('cupones').select('*');
-                if(!errCoup && coupData && coupData.length > 0) {
+                if(!errCoup && coupData) {
                     dbCoupons = coupData.map(c => ({
                         id: c.id,
                         code: c.codigo,
                         type: c.tipo,
                         value: parseFloat(c.valor),
-                        expiry: c.fecha_expiracion,
+                        startDate: c.fecha_inicio || '2026-01-01',
+                        expiry: c.fecha_expiracion || '2026-12-31',
                         activo: c.activo !== false
                     }));
                 }
@@ -1230,13 +1261,56 @@
         };
 
         // -------------------------------------------------------------
-        // PERFIL DEL SPA & PERSONALIZACIÓN DE MARCA
+        // PERFIL DEL SPA & PERSONALIZACIÓN DE MARCA (SUBIR IMAGEN LOCAL)
         // -------------------------------------------------------------
+        let uploadedLogoBase64 = null;
+
+        window.handleLogoFileSelect = function(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            if (file.size > 2 * 1024 * 1024) {
+                showToast('La imagen supera los 2MB. Elige una de menor tamaño.', 'warning');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                uploadedLogoBase64 = e.target.result;
+                const previewBox = document.getElementById('logo-preview-box');
+                if (previewBox) {
+                    previewBox.innerHTML = `<img src="${uploadedLogoBase64}" class="w-full h-full object-contain">`;
+                }
+                showToast('Imagen cargada. Haz clic en "Guardar Cambios de Perfil" para aplicar.', 'info');
+            };
+            reader.readAsDataURL(file);
+        };
+
+        window.resetDefaultLogo = function() {
+            uploadedLogoBase64 = '';
+            settings.logoUrl = '';
+            const fileInput = document.getElementById('profile-logo-file');
+            if (fileInput) fileInput.value = '';
+
+            const previewBox = document.getElementById('logo-preview-box');
+            if (previewBox) {
+                previewBox.innerHTML = `
+                    <svg viewBox="0 0 100 100" class="w-full h-full">
+                        <circle cx="50" cy="50" r="48" fill="#be185d"/>
+                        <circle cx="50" cy="42" rx="21" ry="33" transform="rotate(-15 50 42)" stroke="#ffffff" stroke-width="2.5" fill="none"/>
+                        <path d="M 39,60 C 38,48 41,32 44,23 C 46,19 49,23 50,29 L 53,46 C 53.5,41 51,35 53,33 C 54.5,31.5 56.5,32.5 57,35 C 57.5,37.5 54,41 54,41 L 57,48 C 58,43 61,37 65,44 C 67,48 70,56 74,53" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M 53,35 C 51.5,32.5 48,33.5 49.5,36.5 C 51,39.5 53,41.5 53,41.5 C 53,41.5 55,39.5 56.5,36.5 C 58,33.5 54.5,32.5 53,35 Z" fill="#ffffff" stroke="#ffffff" stroke-width="0.8"/>
+                    </svg>
+                `;
+            }
+            showToast('Logo restablecido al predeterminado rosa', 'info');
+        };
+
         function applyProfileBranding() {
             const companyName = settings.companyName || 'SKINCARE MO';
             const slogan = settings.slogan || 'Terapia Física, Salud y Bienestar';
             const welcomeMsg = settings.welcomeMsg || 'Tu salud y bienestar merecen la mejor atención.';
-            const logoUrl = settings.logoUrl || '';
+            const logoUrl = settings.logoUrl || uploadedLogoBase64 || '';
 
             const titleElem = document.getElementById('brand-title');
             const sloganElem = document.getElementById('brand-slogan');
@@ -1249,42 +1323,52 @@
             if (heroBrandElem) heroBrandElem.innerText = companyName;
 
             const logoContainer = document.getElementById('brand-logo-container');
+            const previewBox = document.getElementById('logo-preview-box');
+
+            const defaultSvgHTML = `
+                <svg viewBox="0 0 100 100" class="w-full h-full">
+                    <defs>
+                        <linearGradient id="pinkGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#f43f5e" />
+                            <stop offset="100%" stop-color="#be185d" />
+                        </linearGradient>
+                        <path id="text-arc-logo" d="M 18,74 A 36,36 0 0,0 82,74" fill="none"/>
+                    </defs>
+                    <circle cx="50" cy="50" r="48" fill="url(#pinkGradient)"/>
+                    <ellipse cx="50" cy="42" rx="21" ry="33" transform="rotate(-15 50 42)" stroke="#ffffff" stroke-width="2.5" fill="none"/>
+                    <path d="M 39,60 C 38,48 41,32 44,23 C 46,19 49,23 50,29 L 53,46 C 53.5,41 51,35 53,33 C 54.5,31.5 56.5,32.5 57,35 C 57.5,37.5 54,41 54,41 L 57,48 C 58,43 61,37 65,44 C 67,48 70,56 74,53" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M 53,35 C 51.5,32.5 48,33.5 49.5,36.5 C 51,39.5 53,41.5 53,41.5 C 53,41.5 55,39.5 56.5,36.5 C 58,33.5 54.5,32.5 53,35 Z" fill="#ffffff" stroke="#ffffff" stroke-width="0.8"/>
+                    <text font-family="'Inter', sans-serif" font-size="7.8" font-weight="700" fill="#ffffff" letter-spacing="1.2">
+                        <textPath href="#text-arc-logo" startOffset="50%" text-anchor="middle">
+                            SKINCARE
+                        </textPath>
+                    </text>
+                </svg>
+            `;
+
             if (logoContainer) {
                 if (logoUrl) {
                     logoContainer.innerHTML = `<img src="${logoUrl}" alt="${companyName}" class="w-full h-full object-contain rounded-full shadow-sm">`;
                 } else {
-                    logoContainer.innerHTML = `
-                        <svg viewBox="0 0 100 100" class="w-full h-full">
-                            <defs>
-                                <linearGradient id="pinkGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                    <stop offset="0%" stop-color="#f43f5e" />
-                                    <stop offset="100%" stop-color="#be185d" />
-                                </linearGradient>
-                                <path id="text-arc-logo" d="M 18,74 A 36,36 0 0,0 82,74" fill="none"/>
-                            </defs>
-                            <circle cx="50" cy="50" r="48" fill="url(#pinkGradient)"/>
-                            <ellipse cx="50" cy="42" rx="21" ry="33" transform="rotate(-15 50 42)" stroke="#ffffff" stroke-width="2.5" fill="none"/>
-                            <path d="M 39,60 C 38,48 41,32 44,23 C 46,19 49,23 50,29 L 53,46 C 53.5,41 51,35 53,33 C 54.5,31.5 56.5,32.5 57,35 C 57.5,37.5 54,41 54,41 L 57,48 C 58,43 61,37 65,44 C 67,48 70,56 74,53" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M 53,35 C 51.5,32.5 48,33.5 49.5,36.5 C 51,39.5 53,41.5 53,41.5 C 53,41.5 55,39.5 56.5,36.5 C 58,33.5 54.5,32.5 53,35 Z" fill="#ffffff" stroke="#ffffff" stroke-width="0.8"/>
-                            <text font-family="'Inter', sans-serif" font-size="7.8" font-weight="700" fill="#ffffff" letter-spacing="1.2">
-                                <textPath href="#text-arc-logo" startOffset="50%" text-anchor="middle">
-                                    SKINCARE
-                                </textPath>
-                            </text>
-                        </svg>
-                    `;
+                    logoContainer.innerHTML = defaultSvgHTML;
+                }
+            }
+
+            if (previewBox) {
+                if (logoUrl) {
+                    previewBox.innerHTML = `<img src="${logoUrl}" alt="${companyName}" class="w-full h-full object-contain">`;
+                } else {
+                    previewBox.innerHTML = defaultSvgHTML;
                 }
             }
 
             const inCompany = document.getElementById('profile-company-name');
             const inSlogan = document.getElementById('profile-slogan');
             const inMsg = document.getElementById('profile-welcome-msg');
-            const inLogo = document.getElementById('profile-logo-url');
 
             if (inCompany && !inCompany.value) inCompany.value = companyName;
             if (inSlogan && !inSlogan.value) inSlogan.value = slogan;
             if (inMsg && !inMsg.value) inMsg.value = welcomeMsg;
-            if (inLogo && !inLogo.value) inLogo.value = logoUrl;
         }
 
         window.saveAdminProfile = async function(e) {
@@ -1292,12 +1376,12 @@
             const companyName = document.getElementById('profile-company-name').value.trim();
             const slogan = document.getElementById('profile-slogan').value.trim();
             const welcomeMsg = document.getElementById('profile-welcome-msg').value.trim();
-            const logoUrl = document.getElementById('profile-logo-url').value.trim();
+            const finalLogoUrl = uploadedLogoBase64 !== null ? uploadedLogoBase64 : (settings.logoUrl || '');
 
             settings.companyName = companyName;
             settings.slogan = slogan;
             settings.welcomeMsg = welcomeMsg;
-            settings.logoUrl = logoUrl;
+            settings.logoUrl = finalLogoUrl;
 
             applyProfileBranding();
 
@@ -1307,13 +1391,13 @@
                     nombre_empresa: companyName,
                     slogan: slogan,
                     mensaje_bienvenida: welcomeMsg,
-                    logo_url: logoUrl
+                    logo_url: finalLogoUrl
                 });
             } catch(err) {
                 console.warn("Error al guardar perfil del spa:", err);
             }
 
-            showToast('¡Perfil del Spa y datos de marca actualizados!', 'success');
+            showToast('¡Perfil del Spa e imagen de logo actualizados con éxito!', 'success');
         };
 
         // -------------------------------------------------------------
@@ -1525,7 +1609,7 @@
         }
 
         // -------------------------------------------------------------
-        // SISTEMA DE CUPONES DE DESCUENTO Y VIGENCIAS
+        // SISTEMA DE CUPONES DE DESCUENTO Y VIGENCIAS (INICIO Y CADUCIDAD)
         // -------------------------------------------------------------
         window.applyCoupon = function() {
             const input = document.getElementById('coupon-code-input');
@@ -1543,12 +1627,23 @@
 
             if (couponObj) {
                 const todayStr = new Date().toISOString().split('T')[0];
+
+                if (couponObj.startDate && couponObj.startDate > todayStr) {
+                    appliedCoupon = null;
+                    msgDiv.className = "text-[11px] font-bold text-amber-700 bg-amber-50 p-1.5 rounded-lg border border-amber-200 mt-1 flex items-center";
+                    msgDiv.innerHTML = `<i class="fa-solid fa-clock mr-1 text-amber-600"></i>Cupón <strong>${code}</strong> no activo aún (válido desde el ${couponObj.startDate})`;
+                    msgDiv.classList.remove('hidden');
+                    showToast(`El cupón ${code} inicia el ${couponObj.startDate}`, 'warning');
+                    updateBookingSummary();
+                    return;
+                }
+
                 if (couponObj.expiry && couponObj.expiry < todayStr) {
                     appliedCoupon = null;
                     msgDiv.className = "text-[11px] font-bold text-rose-700 bg-rose-50 p-1.5 rounded-lg border border-rose-200 mt-1 flex items-center";
-                    msgDiv.innerHTML = `<i class="fa-solid fa-circle-exclamation mr-1 text-rose-600"></i>Cupón <strong>${code}</strong> venció el ${couponObj.expiry}`;
+                    msgDiv.innerHTML = `<i class="fa-solid fa-circle-exclamation mr-1 text-rose-600"></i>Cupón <strong>${code}</strong> caducó el ${couponObj.expiry}`;
                     msgDiv.classList.remove('hidden');
-                    showToast(`El cupón ${code} expiró el ${couponObj.expiry}`, 'warning');
+                    showToast(`El cupón ${code} caducó el ${couponObj.expiry}`, 'warning');
                     updateBookingSummary();
                     return;
                 }
@@ -1579,6 +1674,7 @@
                 code: c.code,
                 type: c.type,
                 value: c.value,
+                startDate: c.startDate || '2026-01-01',
                 expiry: c.expiry || '2026-12-31',
                 activo: true
             }));
@@ -1591,19 +1687,29 @@
             const todayStr = new Date().toISOString().split('T')[0];
 
             container.innerHTML = allCoupons.map(c => {
+                const isNotStarted = c.startDate && c.startDate > todayStr;
                 const isExpired = c.expiry && c.expiry < todayStr;
                 const valueStr = c.type === 'percent' ? `${c.value}% OFF` : `$${c.value} MXN OFF`;
 
+                let statusBadge = `<span class="text-[10px] text-emerald-600 font-bold block"><i class="fa-solid fa-circle-check text-emerald-500 mr-1"></i>Vigente: ${c.startDate || 'Inicio'} al ${c.expiry || 'Sin límite'}</span>`;
+                let borderStyle = 'border-slate-200';
+
+                if (isNotStarted) {
+                    statusBadge = `<span class="text-[10px] text-amber-600 font-bold block"><i class="fa-solid fa-clock mr-1"></i>Próximamente: Inicia el ${c.startDate}</span>`;
+                    borderStyle = 'border-amber-200 bg-amber-50/40';
+                } else if (isExpired) {
+                    statusBadge = `<span class="text-[10px] text-rose-600 font-bold block"><i class="fa-solid fa-ban mr-1"></i>Caducó el: ${c.expiry}</span>`;
+                    borderStyle = 'border-rose-200 bg-rose-50/50';
+                }
+
                 return `
-                    <div class="bg-slate-50 border ${isExpired ? 'border-rose-200 bg-rose-50/50' : 'border-slate-200'} p-2 rounded-xl flex items-center justify-between">
+                    <div class="bg-slate-50 border ${borderStyle} p-2 rounded-xl flex items-center justify-between">
                         <div>
                             <div class="font-bold text-slate-800 flex items-center space-x-1">
                                 <span class="font-mono text-spa-700">${c.code}</span>
                                 <span class="bg-spa-100 text-spa-800 text-[10px] font-extrabold px-1.5 py-0.5 rounded-md">${valueStr}</span>
                             </div>
-                            <span class="text-[10px] ${isExpired ? 'text-rose-600 font-bold' : 'text-slate-500'} block">
-                                ${isExpired ? '⚠️ Expiró el: ' : 'Vigencia hasta: '} ${c.expiry || 'Sin límite'}
-                            </span>
+                            ${statusBadge}
                         </div>
                         <button onclick="deleteCoupon('${c.id}', '${c.code}')" title="Eliminar cupón" class="text-rose-600 hover:text-rose-800 p-1 text-xs">
                             <i class="fa-solid fa-trash-can"></i>
@@ -1618,10 +1724,16 @@
             const code = document.getElementById('config-coupon-code').value.trim().toUpperCase();
             const type = document.getElementById('config-coupon-type').value;
             const value = parseFloat(document.getElementById('config-coupon-value').value);
+            const startDate = document.getElementById('config-coupon-start').value;
             const expiry = document.getElementById('config-coupon-expiry').value;
 
-            if (!code || !value || !expiry) {
+            if (!code || !value || !startDate || !expiry) {
                 showToast('Llena todos los campos del cupón', 'warning');
+                return;
+            }
+
+            if (startDate > expiry) {
+                showToast('La fecha de inicio debe ser anterior a la caducidad', 'warning');
                 return;
             }
 
@@ -1630,13 +1742,14 @@
                     codigo: code,
                     tipo: type,
                     valor: value,
+                    fecha_inicio: startDate,
                     fecha_expiracion: expiry,
                     activo: true
                 }, { onConflict: 'codigo' }).select();
 
                 if (error) throw error;
 
-                showToast(`¡Cupón ${code} guardado con vigencia hasta ${expiry}!`, 'success');
+                showToast(`¡Cupón ${code} guardado (${startDate} a ${expiry})!`, 'success');
                 document.getElementById('config-coupon-code').value = '';
                 document.getElementById('config-coupon-value').value = '';
                 
