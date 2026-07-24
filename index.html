@@ -325,10 +325,6 @@
                     <i class="fa-solid fa-list-check"></i>
                     <span>Servicios</span>
                 </button>
-                <button id="admin-subtab-btn-profile" onclick="switchAdminSubTab('profile')" class="pb-3 px-3 text-xs sm:text-sm font-semibold text-slate-500 hover:text-slate-800 border-b-2 border-transparent flex items-center space-x-2 transition shrink-0">
-                    <i class="fa-solid fa-id-card text-spa-600"></i>
-                    <span>Perfil del Admin</span>
-                </button>
                 <button id="admin-subtab-btn-security" onclick="switchAdminSubTab('security')" class="pb-3 px-3 text-xs sm:text-sm font-semibold text-slate-500 hover:text-slate-800 border-b-2 border-transparent flex items-center space-x-2 transition shrink-0">
                     <i class="fa-solid fa-gear text-amber-600"></i>
                     <span>Configuración</span>
@@ -468,69 +464,6 @@
                     <div id="services-admin-list" class="divide-y divide-slate-100 p-4">
                         <!-- Servicios administrables dinámicos -->
                     </div>
-                </div>
-            </div>
-
-            <!-- SUBPESTAÑA PERFIL DEL ADMIN -->
-            <div id="admin-subcontent-profile" class="space-y-6 hidden">
-                <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200/80 shadow-sm space-y-6">
-                    <div class="flex items-center justify-between border-b border-slate-100 pb-4">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-12 h-12 rounded-2xl bg-spa-100 text-spa-700 flex items-center justify-center text-xl font-bold shadow-inner">
-                                <i class="fa-solid fa-id-card"></i>
-                            </div>
-                            <div>
-                                <h3 class="font-bold text-slate-800 text-lg font-serif-title">Perfil del Spa & Personalización</h3>
-                                <p class="text-xs text-slate-500">Modifica el mensaje de bienvenida, logo principal y nombre de tu marca</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <form onsubmit="saveAdminProfile(event)" class="space-y-4 max-w-2xl">
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-700 mb-1">Nombre de la Empresa / Marca (Opcional)</label>
-                            <input type="text" id="profile-company-name" placeholder="Ej. SKINCARE MO" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-bold text-slate-800 focus:ring-2 focus:ring-spa-500 outline-none">
-                        </div>
-
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-700 mb-1">Slogan / Especialidad (Opcional)</label>
-                            <input type="text" id="profile-slogan" placeholder="Ej. Terapia Física, Salud y Bienestar" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-800 focus:ring-2 focus:ring-spa-500 outline-none">
-                        </div>
-
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-700 mb-1">Mensaje de Bienvenida (Encabezado Principal) (Opcional)</label>
-                            <textarea id="profile-welcome-msg" rows="2" placeholder="Ej. Tu salud y bienestar merecen la mejor atención." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-800 focus:ring-2 focus:ring-spa-500 outline-none resize-none"></textarea>
-                        </div>
-
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-700 mb-1">Imagen del Logo de la Empresa (Opcional)</label>
-                            <div class="flex items-center space-x-4 bg-slate-50 border border-slate-200 rounded-2xl p-3.5">
-                                <div id="logo-preview-box" class="w-14 h-14 rounded-full border border-slate-200 bg-white flex items-center justify-center overflow-hidden shrink-0 shadow-sm">
-                                    <!-- Vista previa dinámica del logo -->
-                                </div>
-                                <div class="space-y-1.5 flex-grow">
-                                    <input type="file" id="profile-logo-file" accept="image/*" onchange="handleLogoFileSelect(event)" class="hidden">
-                                    <div class="flex flex-wrap gap-2">
-                                        <button type="button" onclick="document.getElementById('profile-logo-file').click()" class="bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 font-semibold px-3 py-1.5 rounded-xl text-xs flex items-center space-x-1.5 shadow-sm transition cursor-pointer">
-                                            <i class="fa-solid fa-upload text-spa-600"></i>
-                                            <span>Subir Imagen desde mi Equipo</span>
-                                        </button>
-                                        <button type="button" onclick="resetDefaultLogo()" class="text-rose-600 hover:text-rose-800 text-xs font-semibold px-2 py-1.5 rounded-xl hover:bg-rose-50 transition cursor-pointer">
-                                            <i class="fa-solid fa-rotate-left mr-1"></i>Usar Logo Rosa Predeterminado
-                                        </button>
-                                    </div>
-                                    <p class="text-[10px] text-slate-400">Selecciona una imagen PNG, JPG o SVG desde tu computadora. Si deseas volver al logo predeterminado, presiona "Usar Logo Rosa".</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="pt-2">
-                            <button type="submit" class="bg-spa-600 hover:bg-spa-700 text-white font-bold px-6 py-3 text-xs rounded-2xl shadow-md transition flex items-center space-x-2 cursor-pointer">
-                                <i class="fa-solid fa-floppy-disk"></i>
-                                <span>Guardar Cambios de Perfil</span>
-                            </button>
-                        </div>
-                    </form>
                 </div>
             </div>
 
@@ -1033,7 +966,6 @@
             if (configCouponExpiry) { configCouponExpiry.value = '2026-12-31'; }
 
             // Renderizar la interfaz inmediatamente con 0ms de espera
-            applyProfileBranding();
             updateAllUIComponents();
 
             // Sincronizar en segundo plano con Supabase
@@ -1258,21 +1190,18 @@
         window.switchAdminSubTab = function(subTab) {
             const btnAgenda = document.getElementById('admin-subtab-btn-agenda');
             const btnServices = document.getElementById('admin-subtab-btn-services');
-            const btnProfile = document.getElementById('admin-subtab-btn-profile');
             const btnSecurity = document.getElementById('admin-subtab-btn-security');
 
             const contentAgenda = document.getElementById('admin-subcontent-agenda');
             const contentServices = document.getElementById('admin-subcontent-services');
-            const contentProfile = document.getElementById('admin-subcontent-profile');
             const contentSecurity = document.getElementById('admin-subcontent-security');
 
-            [btnAgenda, btnServices, btnProfile, btnSecurity].forEach(btn => {
+            [btnAgenda, btnServices, btnSecurity].forEach(btn => {
                 if (btn) btn.className = 'pb-3 px-3 text-xs sm:text-sm font-semibold text-slate-500 hover:text-slate-800 border-b-2 border-transparent flex items-center space-x-2 transition shrink-0';
             });
 
             if (contentAgenda) contentAgenda.classList.add('hidden');
             if (contentServices) contentServices.classList.add('hidden');
-            if (contentProfile) contentProfile.classList.add('hidden');
             if (contentSecurity) contentSecurity.classList.add('hidden');
 
             if (subTab === 'agenda' && contentAgenda) {
@@ -1281,183 +1210,12 @@
             } else if (subTab === 'services' && contentServices) {
                 contentServices.classList.remove('hidden');
                 if (btnServices) btnServices.className = 'pb-3 px-3 text-xs sm:text-sm font-bold text-spa-600 border-b-2 border-spa-600 flex items-center space-x-2 transition shrink-0';
-            } else if (subTab === 'profile' && contentProfile) {
-                contentProfile.classList.remove('hidden');
-                if (btnProfile) btnProfile.className = 'pb-3 px-3 text-xs sm:text-sm font-bold text-spa-600 border-b-2 border-spa-600 flex items-center space-x-2 transition shrink-0';
             } else if (subTab === 'security' && contentSecurity) {
                 contentSecurity.classList.remove('hidden');
                 if (btnSecurity) btnSecurity.className = 'pb-3 px-3 text-xs sm:text-sm font-bold text-spa-600 border-b-2 border-spa-600 flex items-center space-x-2 transition shrink-0';
                 renderAdminBlocks();
                 renderAdminCoupons();
             }
-        };
-
-        // -------------------------------------------------------------
-        // PERFIL DEL SPA & PERSONALIZACIÓN DE MARCA (SUBIR IMAGEN LOCAL)
-        // -------------------------------------------------------------
-        let uploadedLogoBase64 = null;
-
-        window.handleLogoFileSelect = function(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const img = new Image();
-                img.onload = function() {
-                    const canvas = document.createElement('canvas');
-                    const ctx = canvas.getContext('2d');
-                    const MAX_SIZE = 240; // 240px max avatar size
-                    let width = img.width;
-                    let height = img.height;
-
-                    if (width > height) {
-                        if (width > MAX_SIZE) {
-                            height *= MAX_SIZE / width;
-                            width = MAX_SIZE;
-                        }
-                    } else {
-                        if (height > MAX_SIZE) {
-                            width *= MAX_SIZE / height;
-                            height = MAX_SIZE;
-                        }
-                    }
-
-                    canvas.width = width;
-                    canvas.height = height;
-                    ctx.drawImage(img, 0, 0, width, height);
-
-                    uploadedLogoBase64 = canvas.toDataURL('image/png', 0.9);
-                    const previewBox = document.getElementById('logo-preview-box');
-                    if (previewBox) {
-                        previewBox.innerHTML = `<img src="${uploadedLogoBase64}" class="w-full h-full object-contain">`;
-                    }
-                    showToast('Imagen cargada y optimizada. Haz clic en "Guardar Cambios de Perfil".', 'info');
-                };
-                img.src = e.target.result;
-            };
-            reader.readAsDataURL(file);
-        };
-
-        window.resetDefaultLogo = function() {
-            uploadedLogoBase64 = '';
-            settings.logoUrl = '';
-            try { localStorage.removeItem('skincare_logo_url'); } catch(e){}
-            const fileInput = document.getElementById('profile-logo-file');
-            if (fileInput) fileInput.value = '';
-
-            applyProfileBranding();
-            showToast('Logo restablecido al predeterminado rosa', 'info');
-        };
-
-        function applyProfileBranding() {
-            const companyName = settings.companyName || 'SKINCARE MO';
-            const slogan = settings.slogan || 'Terapia Física, Salud y Bienestar';
-            const welcomeMsg = settings.welcomeMsg || 'Tu salud y bienestar merecen la mejor atención.';
-            const logoUrl = settings.logoUrl || uploadedLogoBase64 || '';
-
-            const titleElem = document.getElementById('brand-title');
-            const sloganElem = document.getElementById('brand-slogan');
-            const welcomeElem = document.getElementById('hero-welcome-msg');
-            const heroBrandElem = document.getElementById('hero-brand-name');
-
-            if (titleElem) titleElem.innerText = companyName;
-            if (sloganElem) sloganElem.innerText = slogan;
-            if (welcomeElem) welcomeElem.innerText = welcomeMsg;
-            if (heroBrandElem) heroBrandElem.innerText = companyName;
-
-            const logoContainer = document.getElementById('brand-logo-container');
-            const previewBox = document.getElementById('logo-preview-box');
-
-            const defaultSvgHTML = `
-                <svg viewBox="0 0 100 100" class="w-full h-full">
-                    <defs>
-                        <linearGradient id="pinkGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stop-color="#f43f5e" />
-                            <stop offset="100%" stop-color="#be185d" />
-                        </linearGradient>
-                        <path id="text-arc-logo" d="M 18,74 A 36,36 0 0,0 82,74" fill="none"/>
-                    </defs>
-                    <circle cx="50" cy="50" r="48" fill="url(#pinkGradient)"/>
-                    <ellipse cx="50" cy="42" rx="21" ry="33" transform="rotate(-15 50 42)" stroke="#ffffff" stroke-width="2.5" fill="none"/>
-                    <path d="M 39,60 C 38,48 41,32 44,23 C 46,19 49,23 50,29 L 53,46 C 53.5,41 51,35 53,33 C 54.5,31.5 56.5,32.5 57,35 C 57.5,37.5 54,41 54,41 L 57,48 C 58,43 61,37 65,44 C 67,48 70,56 74,53" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M 53,35 C 51.5,32.5 48,33.5 49.5,36.5 C 51,39.5 53,41.5 53,41.5 C 53,41.5 55,39.5 56.5,36.5 C 58,33.5 54.5,32.5 53,35 Z" fill="#ffffff" stroke="#ffffff" stroke-width="0.8"/>
-                    <text font-family="'Inter', sans-serif" font-size="7.8" font-weight="700" fill="#ffffff" letter-spacing="1.2">
-                        <textPath href="#text-arc-logo" startOffset="50%" text-anchor="middle">
-                            SKINCARE
-                        </textPath>
-                    </text>
-                </svg>
-            `;
-
-            if (logoContainer) {
-                if (logoUrl) {
-                    logoContainer.innerHTML = `<img src="${logoUrl}" alt="${companyName}" class="w-full h-full object-contain rounded-full shadow-sm">`;
-                } else {
-                    logoContainer.innerHTML = defaultSvgHTML;
-                }
-            }
-
-            if (previewBox) {
-                if (logoUrl) {
-                    previewBox.innerHTML = `<img src="${logoUrl}" alt="${companyName}" class="w-full h-full object-contain">`;
-                } else {
-                    previewBox.innerHTML = defaultSvgHTML;
-                }
-            }
-
-            const inCompany = document.getElementById('profile-company-name');
-            const inSlogan = document.getElementById('profile-slogan');
-            const inMsg = document.getElementById('profile-welcome-msg');
-
-            if (inCompany) inCompany.value = companyName;
-            if (inSlogan) inSlogan.value = slogan;
-            if (inMsg) inMsg.value = welcomeMsg;
-        }
-
-        window.saveAdminProfile = async function(e) {
-            e.preventDefault();
-            const rawCompany = document.getElementById('profile-company-name').value.trim();
-            const rawSlogan = document.getElementById('profile-slogan').value.trim();
-            const rawMsg = document.getElementById('profile-welcome-msg').value.trim();
-
-            const companyName = rawCompany || settings.companyName || 'SKINCARE MO';
-            const slogan = rawSlogan || settings.slogan || 'Terapia Física, Salud y Bienestar';
-            const welcomeMsg = rawMsg || settings.welcomeMsg || 'Tu salud y bienestar merecen la mejor atención.';
-            const finalLogoUrl = uploadedLogoBase64 !== null ? uploadedLogoBase64 : (settings.logoUrl || localStorage.getItem('skincare_logo_url') || '');
-
-            settings.companyName = companyName;
-            settings.slogan = slogan;
-            settings.welcomeMsg = welcomeMsg;
-            settings.logoUrl = finalLogoUrl;
-
-            // Guardar en localStorage para persistencia instantánea y permanente
-            try {
-                localStorage.setItem('skincare_company_name', companyName);
-                localStorage.setItem('skincare_slogan', slogan);
-                localStorage.setItem('skincare_welcome_msg', welcomeMsg);
-                if (finalLogoUrl) {
-                    localStorage.setItem('skincare_logo_url', finalLogoUrl);
-                } else {
-                    localStorage.removeItem('skincare_logo_url');
-                }
-            } catch(e){}
-
-            applyProfileBranding();
-
-            try {
-                await dbClient.from('configuracion').upsert({
-                    id: 1,
-                    nombre_empresa: companyName,
-                    slogan: slogan,
-                    mensaje_bienvenida: welcomeMsg,
-                    logo_url: finalLogoUrl
-                });
-            } catch(err) {
-                console.warn("Aviso al guardar perfil en Supabase:", err);
-            }
-
-            showToast('¡Perfil del Spa e imagen guardados permanentemente!', 'success');
         };
 
         // -------------------------------------------------------------
