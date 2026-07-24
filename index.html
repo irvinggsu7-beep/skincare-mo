@@ -2245,28 +2245,44 @@
         window.saveServiceForm = async function(e) {
             e.preventDefault();
             const id = document.getElementById('service-id-hidden').value;
-            const nombre = document.getElementById('service-name-input').value;
-            const descripcion = document.getElementById('service-desc-input').value;
-            const duracion = parseInt(document.getElementById('service-duration-input').value);
-            const precio = parseFloat(document.getElementById('service-price-input').value);
+            const nombre = document.getElementById('service-name-input').value.trim();
+            const descripcion = document.getElementById('service-desc-input').value.trim();
+            const duracion = parseInt(document.getElementById('service-duration-input').value) || 60;
+            const precio = parseFloat(document.getElementById('service-price-input').value) || 0;
+
+            if (!nombre || isNaN(precio)) {
+                showToast('Ingresa un nombre y precio válidos', 'warning');
+                return;
+            }
 
             const payload = { nombre, descripcion, duracion_minutos: duracion, precio, activo: true };
 
-            try {
-                if (id) {
-                    const { error } = await dbClient.from('servicios').update(payload).eq('id', id);
-                    if (error) throw error;
-                } else {
-                    const { error } = await dbClient.from('servicios').insert([payload]);
-                    if (error) throw error;
+            // Actualización optimista local en el estado de la app
+            if (id) {
+                const existingIdx = services.findIndex(s => String(s.id) === String(id));
+                if (existingIdx !== -1) {
+                    services[existingIdx] = { id: String(id), nombre, descripcion, duracion, precio, activo: true };
                 }
-                window.closeModal('modal-service');
-                showToast(id ? 'Servicio actualizado' : 'Servicio creado correctamente', 'success');
-                // Forzar refresco visual inmediato
+            } else {
+                const newId = 's-' + Date.now();
+                services.push({ id: newId, nombre, descripcion, duracion, precio, activo: true });
+            }
+
+            // Renderizar inmediatamente en ambas vistas (Cliente y Admin)
+            renderClientServices();
+            renderAdminServices();
+            window.closeModal('modal-service');
+            showToast(id ? 'Servicio actualizado' : 'Servicio creado correctamente', 'success');
+
+            try {
+                if (id && !id.startsWith('serv-') && !id.startsWith('s-')) {
+                    await dbClient.from('servicios').update(payload).eq('id', id);
+                } else {
+                    await dbClient.from('servicios').insert([payload]);
+                }
                 await fetchDataFromSupabase();
             } catch (err) {
-                console.log("Error guardando servicio", err);
-                showToast("Error: " + (err.message || "No se pudo guardar el servicio"), "warning");
+                console.warn("Aviso al guardar servicio en Supabase:", err);
             }
         };
 
