@@ -219,12 +219,18 @@
                         </div>
 
                         <!-- Resumen Seleccionado -->
-                        <div id="booking-summary-box" class="hidden bg-spa-50/80 border border-spa-200/80 p-3.5 rounded-2xl space-y-1 text-xs text-spa-900">
-                            <p class="font-bold flex justify-between">
-                                <span id="sum-service-name">-</span>
-                                <span id="sum-service-price" class="text-spa-700 font-semibold">$0</span>
-                            </p>
-                            <p class="text-[11px] text-slate-600 flex items-center space-x-2">
+                        <div id="booking-summary-box" class="hidden bg-spa-50/80 border border-spa-200/80 p-3.5 rounded-2xl space-y-1.5 text-xs text-spa-900">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span id="sum-service-name" class="font-bold text-slate-900 block">-</span>
+                                    <span id="sum-service-count" class="text-[10px] text-spa-700 font-semibold bg-spa-100 px-2 py-0.5 rounded-full inline-block mt-0.5">1 servicio</span>
+                                </div>
+                                <div class="text-right">
+                                    <span id="sum-service-price" class="text-spa-700 font-bold text-sm block">$0</span>
+                                    <span id="sum-discount-badge" class="text-[10px] text-emerald-700 font-bold hidden">Descuento aplicado</span>
+                                </div>
+                            </div>
+                            <p class="text-[11px] text-slate-600 flex items-center space-x-2 pt-1 border-t border-spa-200/60">
                                 <span><i class="fa-regular fa-clock text-spa-600 mr-1"></i><span id="sum-service-duration">0 min</span></span>
                                 <span>•</span>
                                 <span><i class="fa-regular fa-calendar text-spa-600 mr-1"></i><span id="sum-date-time">-</span></span>
@@ -252,6 +258,16 @@
                                     <option value="whatsapp">WhatsApp / Mensaje Móvil</option>
                                     <option value="email">Correo Electrónico</option>
                                 </select>
+                            </div>
+
+                            <!-- Secciones de Cupón de Descuento (Opcional) -->
+                            <div class="pt-2 border-t border-slate-100 space-y-1.5">
+                                <label class="block text-xs font-semibold text-slate-700">Cupón de Descuento (Opcional)</label>
+                                <div class="flex space-x-2">
+                                    <input type="text" id="coupon-code-input" placeholder="Ej. MAYE10, SKIN50" class="uppercase w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:ring-2 focus:ring-spa-500 outline-none">
+                                    <button type="button" onclick="applyCoupon()" class="bg-spa-600 hover:bg-spa-700 text-white font-bold px-3.5 py-2 text-xs rounded-xl transition shadow-sm">Aplicar</button>
+                                </div>
+                                <div id="coupon-message" class="text-[11px] font-bold hidden"></div>
                             </div>
 
                             <button type="submit" id="btn-submit-booking" disabled class="w-full mt-2 bg-slate-300 text-slate-500 text-xs font-bold py-3.5 px-4 rounded-2xl transition flex items-center justify-center space-x-2 cursor-not-allowed">
@@ -711,27 +727,27 @@
     </div>
 
     <!-- MODAL CONFIRMACIÓN DE RESERVA Y FICHA DE PAGO -->
-    <div id="modal-booking-success" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 flex items-center justify-center hidden p-4">
-        <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100 text-center space-y-4 max-h-[90vh] overflow-y-auto custom-scrollbar">
+    <div id="modal-booking-success" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 flex items-center justify-center hidden p-3 sm:p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-4 sm:p-6 shadow-2xl border border-slate-100 text-center space-y-3 sm:space-y-4 max-h-[92vh] overflow-y-auto custom-scrollbar">
             
             <!-- CONTENEDOR DESCARGABLE PARA CAPTURA DE PANTALLA / IMAGEN -->
-            <div id="voucher-printable-card" class="bg-white p-4 rounded-2xl border border-slate-100 space-y-3 text-left">
+            <div id="voucher-printable-card" class="bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-100 space-y-2.5 sm:space-y-3 text-left">
                 <div class="text-center space-y-1 pb-2 border-b border-slate-100">
-                    <div class="w-12 h-12 bg-amber-100 text-amber-700 rounded-full flex items-center justify-center text-xl mx-auto shadow-sm">
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 bg-amber-100 text-amber-700 rounded-full flex items-center justify-center text-lg sm:text-xl mx-auto shadow-sm">
                         <i class="fa-solid fa-clock-rotate-left"></i>
                     </div>
-                    <h3 class="text-lg font-bold font-serif-title text-slate-900">SKINCARE MO</h3>
-                    <p class="text-[11px] font-bold text-spa-600 uppercase">Ficha de Reserva & Depósito</p>
+                    <h3 class="text-base sm:text-lg font-bold font-serif-title text-slate-900">SKINCARE MO</h3>
+                    <p class="text-[10px] sm:text-[11px] font-bold text-spa-600 uppercase">Ficha de Reserva & Depósito</p>
                 </div>
 
                 <!-- Alerta de tiempo límite -->
-                <div id="voucher-time-alert" class="bg-amber-50 border border-amber-200 p-3 rounded-xl text-xs text-amber-900 font-medium leading-relaxed">
+                <div id="voucher-time-alert" class="bg-amber-50 border border-amber-200 p-2.5 sm:p-3 rounded-xl text-[11px] sm:text-xs text-amber-900 font-medium leading-relaxed">
                     <i class="fa-solid fa-triangle-exclamation text-amber-600 mr-1"></i>
                     <span id="voucher-limit-text">Dispones de 2 horas a partir de ahora para realizar una transferencia de $150 MXN y enviar el comprobante vía WA al teléfono 7772148451.</span>
                 </div>
                 
                 <!-- Resumen de Cita -->
-                <div class="bg-slate-50 border border-slate-200/80 rounded-xl p-3 text-xs space-y-1.5 text-slate-700">
+                <div class="bg-slate-50 border border-slate-200/80 rounded-xl p-2.5 sm:p-3 text-[11px] sm:text-xs space-y-1 sm:space-y-1.5 text-slate-700">
                     <div class="flex justify-between border-b border-slate-200/60 pb-1">
                         <span class="text-slate-400">Código Reserva:</span>
                         <span id="voucher-code" class="font-mono font-bold text-spa-700">#0000</span>
@@ -751,8 +767,8 @@
                 </div>
 
                 <!-- Ficha de Depósito OPENBANK -->
-                <div class="bg-spa-50/80 border border-spa-200 p-3.5 rounded-xl text-xs space-y-1.5">
-                    <div class="flex items-center justify-between border-b border-spa-200 pb-1.5">
+                <div class="bg-spa-50/80 border border-spa-200 p-3 sm:p-3.5 rounded-xl text-[11px] sm:text-xs space-y-1 sm:space-y-1.5">
+                    <div class="flex items-center justify-between border-b border-spa-200 pb-1">
                         <span class="font-bold text-spa-900 uppercase tracking-wider text-[10px]"><i class="fa-solid fa-building-columns mr-1"></i>Datos de Transferencia</span>
                         <span class="bg-spa-600 text-white font-bold px-2 py-0.5 rounded-full text-[10px]">$150.00 MXN</span>
                     </div>
@@ -775,24 +791,35 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Enlace Directo WhatsApp grabado en la Ficha -->
+                <div class="bg-emerald-50 border border-emerald-200 p-2 rounded-xl text-center space-y-0.5">
+                    <span class="text-[10px] font-bold text-emerald-800 flex items-center justify-center space-x-1">
+                        <i class="fa-brands fa-whatsapp text-emerald-600 text-xs"></i>
+                        <span>WhatsApp de confirmación (7772148451):</span>
+                    </span>
+                    <a href="https://wa.me/527772148451" target="_blank" class="font-mono font-bold text-[11px] text-emerald-700 hover:underline block select-all">https://wa.me/527772148451</a>
+                </div>
             </div>
 
-            <!-- BOTONES DE ACCIÓN PARA GUARDAR Y ENVIAR -->
-            <div class="space-y-2 pt-1">
-                <!-- Botón Descargar Imagen -->
-                <button onclick="downloadVoucherAsImage()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 text-xs rounded-2xl shadow-md transition flex items-center justify-center space-x-2">
-                    <i class="fa-solid fa-download"></i>
-                    <span>Descargar Ficha como Imagen</span>
-                </button>
+            <!-- BOTONES DE ACCIÓN COMPACTOS Y OPTIMIZADOS PARA CELULAR -->
+            <div class="space-y-1.5 pt-1">
+                <div class="grid grid-cols-2 gap-2">
+                    <!-- Botón Descargar Ficha -->
+                    <button onclick="downloadVoucherAsImage()" class="bg-slate-900 hover:bg-slate-800 text-white font-bold py-2 px-2.5 text-[11px] rounded-xl shadow-md transition flex items-center justify-center space-x-1.5">
+                        <i class="fa-solid fa-download"></i>
+                        <span>Descargar Ficha</span>
+                    </button>
 
-                <!-- Botón WhatsApp Directo -->
-                <button onclick="openWhatsAppForVoucher()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 text-xs rounded-2xl shadow-md transition flex items-center justify-center space-x-2">
-                    <i class="fa-brands fa-whatsapp text-sm"></i>
-                    <span>Enviar Comprobante por WhatsApp (7772148451)</span>
-                </button>
+                    <!-- Botón WhatsApp Directo (con ícono) -->
+                    <button onclick="openWhatsAppForVoucher()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-2.5 text-[11px] rounded-xl shadow-md transition flex items-center justify-center space-x-1.5">
+                        <i class="fa-brands fa-whatsapp text-sm"></i>
+                        <span>Enviar Comprobante</span>
+                    </button>
+                </div>
 
                 <!-- Botón Cerrar -->
-                <button onclick="closeModal('modal-booking-success'); resetBookingForm();" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-2.5 text-xs rounded-2xl transition">
+                <button onclick="closeModal('modal-booking-success'); resetBookingForm();" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-1.5 text-xs rounded-xl transition">
                     Cerrar / Entendido
                 </button>
             </div>
@@ -844,8 +871,17 @@
             operatingDays: [1, 2, 3, 4, 5, 6] 
         };
 
-        let selectedServiceId = null;
+        let selectedServiceIds = [];
         let selectedTimeSlot = null;
+        let appliedCoupon = null;
+
+        const availableCoupons = [
+            { code: 'MAYE10', type: 'percent', value: 10, label: '10% de descuento' },
+            { code: 'SKIN10', type: 'percent', value: 10, label: '10% de descuento' },
+            { code: 'MAYE50', type: 'fixed', value: 50, label: '$50.00 MXN de descuento' },
+            { code: 'PROMO15', type: 'percent', value: 15, label: '15% de descuento' },
+            { code: 'SPA100', type: 'fixed', value: 100, label: '$100.00 MXN de descuento' }
+        ];
 
         // -------------------------------------------------------------
         // INICIALIZACIÓN Y SUSCRIPCIÓN EN TIEMPO REAL (SUPABASE)
@@ -1068,7 +1104,7 @@
         };
 
         // -------------------------------------------------------------
-        // RENDERIZADO DE SERVICIOS (CLIENTE)
+        // RENDERIZADO Y SELECCIÓN DE SERVICIOS (HASTA 2 POR RESERVACIÓN)
         // -------------------------------------------------------------
         function renderClientServices() {
             const container = document.getElementById('services-client-list');
@@ -1076,7 +1112,7 @@
             if (!container) return;
 
             const activeServices = services.filter(s => s.activo !== false);
-            if (badge) badge.innerText = `${activeServices.length} disponibles`;
+            if (badge) badge.innerText = `${activeServices.length} disponibles (Máx. 2 por cita)`;
 
             if (activeServices.length === 0) {
                 container.innerHTML = `<p class="col-span-full text-xs text-slate-400 text-center py-6">No hay servicios disponibles temporalmente.</p>`;
@@ -1084,10 +1120,12 @@
             }
 
             container.innerHTML = activeServices.map(s => {
-                const isSelected = s.id === selectedServiceId;
+                const isSelected = selectedServiceIds.includes(s.id);
+                const selectIndex = selectedServiceIds.indexOf(s.id) + 1;
+
                 return `
-                    <div onclick="selectService('${s.id}')" class="cursor-pointer bg-white p-5 rounded-3xl border transition-all duration-200 relative group ${isSelected ? 'border-spa-600 ring-2 ring-spa-500/20 bg-spa-50/30 shadow-md' : 'border-slate-200 hover:border-spa-300 hover:shadow-sm'}">
-                        <div class="flex justify-between items-start mb-2">
+                    <div onclick="selectService('${s.id}')" class="cursor-pointer bg-white p-4 sm:p-5 rounded-3xl border transition-all duration-200 relative group ${isSelected ? 'border-spa-600 ring-2 ring-spa-500/20 bg-spa-50/40 shadow-md' : 'border-slate-200 hover:border-spa-300 hover:shadow-sm'}">
+                        <div class="flex justify-between items-start mb-1.5">
                             <h4 class="font-bold text-slate-900 text-sm font-serif-title">${s.nombre}</h4>
                             <span class="font-bold text-spa-700 text-sm">$${s.precio}</span>
                         </div>
@@ -1095,7 +1133,7 @@
                         <div class="flex items-center justify-between text-[11px] font-semibold">
                             <span class="text-slate-500 bg-slate-100 px-2.5 py-1 rounded-full"><i class="fa-regular fa-clock text-spa-600 mr-1"></i>${s.duracion} min</span>
                             <span class="${isSelected ? 'text-spa-700 font-bold' : 'text-slate-400 group-hover:text-spa-600'} flex items-center">
-                                ${isSelected ? '<i class="fa-solid fa-circle-check text-spa-600 mr-1"></i>Seleccionado' : 'Elegir <i class="fa-solid fa-arrow-right ml-1"></i>'}
+                                ${isSelected ? `<i class="fa-solid fa-circle-check text-spa-600 mr-1"></i>Seleccionado (${selectIndex}/2)` : 'Elegir <i class="fa-solid fa-plus ml-1 text-xs"></i>'}
                             </span>
                         </div>
                     </div>
@@ -1104,7 +1142,15 @@
         }
 
         window.selectService = function(id) {
-            selectedServiceId = id;
+            if (selectedServiceIds.includes(id)) {
+                selectedServiceIds = selectedServiceIds.filter(sId => sId !== id);
+            } else {
+                if (selectedServiceIds.length >= 2) {
+                    showToast('Puedes elegir máximo 2 servicios por reservación', 'info');
+                    return;
+                }
+                selectedServiceIds.push(id);
+            }
             selectedTimeSlot = null;
             renderClientServices();
             updateBookingSummary();
@@ -1112,24 +1158,24 @@
         };
 
         // -------------------------------------------------------------
-        // ALGORITMO DE DISPONIBILIDAD DE HORARIOS Y BLOQUEO
+        // ALGORITMO DE DISPONIBILIDAD DE HORARIOS (DURACIÓN COMBINADA)
         // -------------------------------------------------------------
         window.loadAvailableTimeSlots = function() {
             const container = document.getElementById('time-slots-container');
             const dateInput = document.getElementById('booking-date');
             if (!container || !dateInput) return;
 
-            if (!selectedServiceId) {
-                container.innerHTML = `<p class="col-span-full text-xs text-slate-400 text-center py-6 bg-slate-50 rounded-2xl border border-dashed border-slate-200">Selecciona un servicio arriba primero</p>`;
+            if (selectedServiceIds.length === 0) {
+                container.innerHTML = `<p class="col-span-full text-xs text-slate-400 text-center py-6 bg-slate-50 rounded-2xl border border-dashed border-slate-200">Selecciona hasta 2 servicios arriba primero</p>`;
                 return;
             }
 
-            const service = services.find(s => s.id === selectedServiceId);
-            if (!service || service.activo === false) {
-                selectedServiceId = null;
+            const selServices = services.filter(s => selectedServiceIds.includes(s.id) && s.activo !== false);
+            if (selServices.length === 0) {
+                selectedServiceIds = [];
                 selectedTimeSlot = null;
                 updateBookingSummary();
-                container.innerHTML = `<p class="col-span-full text-xs text-slate-400 text-center py-6 bg-slate-50 rounded-2xl border border-dashed border-slate-200">El servicio seleccionado no está disponible. Elige otro por favor.</p>`;
+                container.innerHTML = `<p class="col-span-full text-xs text-slate-400 text-center py-6 bg-slate-50 rounded-2xl border border-dashed border-slate-200">Servicio no disponible. Selecciona otro por favor.</p>`;
                 return;
             }
 
@@ -1150,7 +1196,8 @@
                 return;
             }
 
-            const duration = parseInt(service.duracion) || 60;
+            // Duración combinada total
+            const duration = selServices.reduce((sum, s) => sum + (parseInt(s.duracion) || 60), 0);
             const openTimeStr = settings.openTime || '09:00';
             const closeTimeStr = settings.closeTime || '18:00';
 
@@ -1164,11 +1211,10 @@
                 const startStr = minutesToTime(min);
                 const endStr = minutesToTime(min + duration);
 
-                // Calcular diferencia con el tiempo actual
                 const slotDateTime = new Date(`${selectedDate}T${startStr}:00`);
                 const diffMinutes = Math.floor((slotDateTime - now) / 60000);
 
-                const tooClose = diffMinutes <= 121; // Regla de anticipación mínima (> 121 min / 2h 1min)
+                const tooClose = diffMinutes <= 121; // Mínimo > 121 min (2h 1m)
                 const isOccupied = checkSlotOverlap(selectedDate, startStr, endStr);
 
                 slots.push({
@@ -1181,7 +1227,7 @@
             }
 
             if (slots.length === 0) {
-                container.innerHTML = `<p class="col-span-full text-xs text-amber-700 bg-amber-50 p-4 rounded-2xl text-center">No hay horarios que se ajusten a la duración de este servicio (${duration} min) para el horario establecido (${openTimeStr} a ${closeTimeStr}).</p>`;
+                container.innerHTML = `<p class="col-span-full text-xs text-amber-700 bg-amber-50 p-4 rounded-2xl text-center">No hay bloques continuos para la duración combinada (${duration} min) en este día.</p>`;
                 return;
             }
 
@@ -1266,14 +1312,46 @@
         }
 
         // -------------------------------------------------------------
-        // FORMULARIO DE RESERVA CLIENTE
+        // SISTEMA DE CUPONES DE DESCUENTO
+        // -------------------------------------------------------------
+        window.applyCoupon = function() {
+            const input = document.getElementById('coupon-code-input');
+            const msgDiv = document.getElementById('coupon-message');
+            if (!input || !msgDiv) return;
+
+            const code = input.value.trim().toUpperCase();
+            if (!code) {
+                showToast('Ingresa un código de cupón primero', 'warning');
+                return;
+            }
+
+            const couponObj = availableCoupons.find(c => c.code === code);
+            if (couponObj) {
+                appliedCoupon = couponObj;
+                msgDiv.className = "text-[11px] font-bold text-emerald-700 bg-emerald-50 p-1.5 rounded-lg border border-emerald-200 mt-1 flex items-center";
+                msgDiv.innerHTML = `<i class="fa-solid fa-circle-check mr-1 text-emerald-600"></i>Cupón <strong>${couponObj.code}</strong> aplicado (${couponObj.label})`;
+                msgDiv.classList.remove('hidden');
+                showToast(`¡Cupón ${couponObj.code} aplicado con éxito!`, 'success');
+            } else {
+                appliedCoupon = null;
+                msgDiv.className = "text-[11px] font-bold text-rose-700 bg-rose-50 p-1.5 rounded-lg border border-rose-200 mt-1 flex items-center";
+                msgDiv.innerHTML = `<i class="fa-solid fa-circle-xmark mr-1 text-rose-600"></i>Cupón no válido o no encontrado`;
+                msgDiv.classList.remove('hidden');
+                showToast('Cupón no válido', 'warning');
+            }
+
+            updateBookingSummary();
+        };
+
+        // -------------------------------------------------------------
+        // FORMULARIO Y RESUMEN DE RESERVA
         // -------------------------------------------------------------
         function updateBookingSummary() {
             const summaryBox = document.getElementById('booking-summary-box');
             const submitBtn = document.getElementById('btn-submit-booking');
             const dateInput = document.getElementById('booking-date');
 
-            if (!selectedServiceId || !selectedTimeSlot) {
+            if (selectedServiceIds.length === 0 || !selectedTimeSlot) {
                 if (summaryBox) summaryBox.classList.add('hidden');
                 if (submitBtn) {
                     submitBtn.disabled = true;
@@ -1282,12 +1360,37 @@
                 return;
             }
 
-            const service = services.find(s => s.id === selectedServiceId);
-            if (!service) return;
+            const selServices = services.filter(s => selectedServiceIds.includes(s.id));
+            if (selServices.length === 0) return;
 
-            document.getElementById('sum-service-name').innerText = service.nombre;
-            document.getElementById('sum-service-price').innerText = `$${service.precio}`;
-            document.getElementById('sum-service-duration').innerText = `${service.duracion} min`;
+            const serviceNames = selServices.map(s => s.nombre).join(' + ');
+            const subtotal = selServices.reduce((sum, s) => sum + parseFloat(s.precio || 0), 0);
+            const totalDuration = selServices.reduce((sum, s) => sum + (parseInt(s.duracion) || 60), 0);
+
+            // Cálculo de Descuento
+            let discountAmount = 0;
+            if (appliedCoupon) {
+                if (appliedCoupon.type === 'percent') {
+                    discountAmount = subtotal * (appliedCoupon.value / 100);
+                } else if (appliedCoupon.type === 'fixed') {
+                    discountAmount = appliedCoupon.value;
+                }
+            }
+            const finalPrice = Math.max(0, subtotal - discountAmount);
+
+            document.getElementById('sum-service-name').innerText = serviceNames;
+            document.getElementById('sum-service-count').innerText = `${selServices.length} servicio${selServices.length > 1 ? 's' : ''}`;
+            
+            if (discountAmount > 0) {
+                document.getElementById('sum-service-price').innerHTML = `$${finalPrice.toFixed(2)} MXN <span class="text-xs line-through text-slate-400 font-normal">$${subtotal}</span>`;
+                document.getElementById('sum-discount-badge').innerText = `Descuento -${appliedCoupon.type === 'percent' ? appliedCoupon.value + '%' : '$' + appliedCoupon.value}`;
+                document.getElementById('sum-discount-badge').classList.remove('hidden');
+            } else {
+                document.getElementById('sum-service-price').innerText = `$${subtotal} MXN`;
+                document.getElementById('sum-discount-badge').classList.add('hidden');
+            }
+
+            document.getElementById('sum-service-duration').innerText = `${totalDuration} min`;
             document.getElementById('sum-date-time').innerText = `${dateInput.value} a las ${selectedTimeSlot}`;
 
             summaryBox.classList.remove('hidden');
@@ -1298,15 +1401,25 @@
         window.submitBooking = async function(e) {
             e.preventDefault();
 
-            if (!selectedServiceId || !selectedTimeSlot) {
-                showToast('Por favor selecciona un servicio y un horario disponible', 'warning');
+            if (selectedServiceIds.length === 0 || !selectedTimeSlot) {
+                showToast('Por favor selecciona servicio(s) y un horario disponible', 'warning');
                 return;
             }
 
-            const service = services.find(s => s.id === selectedServiceId);
+            const selServices = services.filter(s => selectedServiceIds.includes(s.id));
+            const serviceNames = selServices.map(s => s.nombre).join(' + ');
+            const subtotal = selServices.reduce((sum, s) => sum + parseFloat(s.precio || 0), 0);
+            const totalDuration = selServices.reduce((sum, s) => sum + (parseInt(s.duracion) || 60), 0);
+
+            let discountAmount = 0;
+            if (appliedCoupon) {
+                if (appliedCoupon.type === 'percent') discountAmount = subtotal * (appliedCoupon.value / 100);
+                else if (appliedCoupon.type === 'fixed') discountAmount = appliedCoupon.value;
+            }
+            const finalPrice = Math.max(0, subtotal - discountAmount);
+
             const dateInput = document.getElementById('booking-date').value;
-            const duration = parseInt(service.duracion) || 60;
-            const horaFin = minutesToTime(timeToMinutes(selectedTimeSlot) + duration);
+            const horaFin = minutesToTime(timeToMinutes(selectedTimeSlot) + totalDuration);
 
             const name = document.getElementById('client-name').value;
             const phone = document.getElementById('client-phone').value;
@@ -1336,9 +1449,9 @@
             const fechaLimitePago = new Date(now.getTime() + (limitMinutes * 60000)).toISOString();
 
             const bookingData = {
-                servicio_id: selectedServiceId,
-                servicio_nombre: service.nombre,
-                precio: service.precio,
+                servicio_id: selectedServiceIds[0], // ID primario
+                servicio_nombre: serviceNames,
+                precio: finalPrice,
                 fecha: dateInput,
                 hora_inicio: selectedTimeSlot,
                 hora_fin: horaFin,
@@ -1361,8 +1474,8 @@
 
                 // Llenar Ficha de Pago en Modal
                 document.getElementById('voucher-code').innerText = `#${data[0].id.split('-')[0].toUpperCase()}`;
-                document.getElementById('voucher-service').innerText = service.nombre;
-                document.getElementById('voucher-date').innerText = `${dateInput} @ ${selectedTimeSlot}`;
+                document.getElementById('voucher-service').innerText = serviceNames;
+                document.getElementById('voucher-date').innerText = `${dateInput} @ ${selectedTimeSlot} (${totalDuration} min)`;
                 document.getElementById('voucher-client').innerText = name;
                 document.getElementById('voucher-ref-client').innerText = name;
 
