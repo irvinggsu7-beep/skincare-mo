@@ -1454,45 +1454,58 @@
             const badge = document.getElementById('service-count-badge');
             if (!container) return;
 
-            const activeServices = services.filter(s => s.activo !== false);
-            if (badge) badge.innerText = `${activeServices.length} disponibles (Máx. 2 por cita)`;
+            try {
+                const activeServices = services.filter(s => s && s.activo !== false);
+                if (badge) badge.innerText = `${activeServices.length} disponibles (Máx. 2 por cita)`;
 
-            if (activeServices.length === 0) {
-                container.innerHTML = `<p class="col-span-full text-xs text-slate-400 text-center py-6">No hay servicios disponibles temporalmente.</p>`;
-                return;
+                if (activeServices.length === 0) {
+                    container.innerHTML = `<p class="col-span-full text-xs text-slate-400 text-center py-6">No hay servicios disponibles temporalmente.</p>`;
+                    return;
+                }
+
+                container.innerHTML = activeServices.map((s, idx) => {
+                    const sId = String(s.id || s.id_servicio || ('s-' + idx));
+                    const sNombre = s.nombre || 'Tratamiento Spa';
+                    const sPrecioRaw = s.precio !== undefined && s.precio !== null ? s.precio : 0;
+                    const sPrecio = parseFloat(sPrecioRaw).toFixed(2);
+                    const sDesc = s.descripcion || 'Sin descripción disponible.';
+                    const sDuracion = s.duracion || s.duracion_minutos || 60;
+
+                    const isSelected = selectedServiceIds.includes(sId);
+                    const selectIndex = selectedServiceIds.indexOf(sId) + 1;
+
+                    return `
+                        <div onclick="selectService('${sId}')" class="cursor-pointer bg-white p-4 sm:p-5 rounded-3xl border transition-all duration-200 relative group ${isSelected ? 'border-spa-600 ring-2 ring-spa-500/20 bg-spa-50/40 shadow-md' : 'border-slate-200 hover:border-spa-300 hover:shadow-sm'}">
+                            <div class="flex justify-between items-start mb-1.5">
+                                <h4 class="font-bold text-slate-900 text-sm font-serif-title">${sNombre}</h4>
+                                <span class="font-bold text-spa-700 text-sm">$${sPrecio}</span>
+                            </div>
+                            <p class="text-xs text-slate-500 line-clamp-2 mb-3">${sDesc}</p>
+                            <div class="flex items-center justify-between text-[11px] font-semibold">
+                                <span class="text-slate-500 bg-slate-100 px-2.5 py-1 rounded-full"><i class="fa-regular fa-clock text-spa-600 mr-1"></i>${sDuracion} min</span>
+                                <span class="${isSelected ? 'text-spa-700 font-bold' : 'text-slate-400 group-hover:text-spa-600'} flex items-center">
+                                    ${isSelected ? `<i class="fa-solid fa-circle-check text-spa-600 mr-1"></i>Seleccionado (${selectIndex}/2)` : 'Elegir <i class="fa-solid fa-plus ml-1 text-xs"></i>'}
+                                </span>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } catch (err) {
+                console.error("Error al renderizar catálogo de servicios:", err);
+                container.innerHTML = `<p class="col-span-full text-xs text-rose-500 text-center py-6">Ocurrió un aviso al cargar catálogo. Por favor recarga la página.</p>`;
             }
-
-            container.innerHTML = activeServices.map(s => {
-                const isSelected = selectedServiceIds.includes(s.id);
-                const selectIndex = selectedServiceIds.indexOf(s.id) + 1;
-
-                return `
-                    <div onclick="selectService('${s.id}')" class="cursor-pointer bg-white p-4 sm:p-5 rounded-3xl border transition-all duration-200 relative group ${isSelected ? 'border-spa-600 ring-2 ring-spa-500/20 bg-spa-50/40 shadow-md' : 'border-slate-200 hover:border-spa-300 hover:shadow-sm'}">
-                        <div class="flex justify-between items-start mb-1.5">
-                            <h4 class="font-bold text-slate-900 text-sm font-serif-title">${s.nombre}</h4>
-                            <span class="font-bold text-spa-700 text-sm">$${s.precio}</span>
-                        </div>
-                        <p class="text-xs text-slate-500 line-clamp-2 mb-3">${s.descripcion || 'Sin descripción.'}</p>
-                        <div class="flex items-center justify-between text-[11px] font-semibold">
-                            <span class="text-slate-500 bg-slate-100 px-2.5 py-1 rounded-full"><i class="fa-regular fa-clock text-spa-600 mr-1"></i>${s.duracion} min</span>
-                            <span class="${isSelected ? 'text-spa-700 font-bold' : 'text-slate-400 group-hover:text-spa-600'} flex items-center">
-                                ${isSelected ? `<i class="fa-solid fa-circle-check text-spa-600 mr-1"></i>Seleccionado (${selectIndex}/2)` : 'Elegir <i class="fa-solid fa-plus ml-1 text-xs"></i>'}
-                            </span>
-                        </div>
-                    </div>
-                `;
-            }).join('');
         }
 
         window.selectService = function(id) {
-            if (selectedServiceIds.includes(id)) {
-                selectedServiceIds = selectedServiceIds.filter(sId => sId !== id);
+            const strId = String(id);
+            if (selectedServiceIds.includes(strId)) {
+                selectedServiceIds = selectedServiceIds.filter(sId => sId !== strId);
             } else {
                 if (selectedServiceIds.length >= 2) {
                     showToast('Puedes elegir máximo 2 servicios por reservación', 'info');
                     return;
                 }
-                selectedServiceIds.push(id);
+                selectedServiceIds.push(strId);
             }
             selectedTimeSlot = null;
             renderClientServices();
@@ -1513,7 +1526,7 @@
                 return;
             }
 
-            const selServices = services.filter(s => selectedServiceIds.includes(s.id) && s.activo !== false);
+            const selServices = services.filter(s => selectedServiceIds.includes(String(s.id)) && s.activo !== false);
             if (selServices.length === 0) {
                 selectedServiceIds = [];
                 selectedTimeSlot = null;
