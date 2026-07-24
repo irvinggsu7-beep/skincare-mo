@@ -1034,6 +1034,11 @@
             if (configCouponStart) { configCouponStart.value = today; }
             if (configCouponExpiry) { configCouponExpiry.value = '2026-12-31'; }
 
+            // Renderizar la interfaz inmediatamente con 0ms de espera
+            applyProfileBranding();
+            updateAllUIComponents();
+
+            // Sincronizar en segundo plano con Supabase
             await fetchDataFromSupabase();
             setupRealtimeListeners();
         });
