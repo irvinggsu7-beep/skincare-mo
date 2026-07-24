@@ -951,9 +951,9 @@
         let dbCoupons = [...availableCoupons];
 
         // -------------------------------------------------------------
-        // INICIALIZACIÓN Y SUSCRIPCIÓN EN TIEMPO REAL (SUPABASE)
+        // INICIALIZACIÓN INSTANTÁNEA Y TIEMPO REAL (SUPABASE)
         // -------------------------------------------------------------
-        window.addEventListener('load', async () => {
+        function initApplication() {
             const today = new Date().toISOString().split('T')[0];
             const dateInput = document.getElementById('booking-date');
             const configBlockDate = document.getElementById('config-block-date');
@@ -965,13 +965,19 @@
             if (configCouponStart) { configCouponStart.value = today; }
             if (configCouponExpiry) { configCouponExpiry.value = '2026-12-31'; }
 
-            // Renderizar la interfaz inmediatamente con 0ms de espera
+            // Renderizar la interfaz inmediatamente a los 0ms (sin esperar a red ni imágenes)
             updateAllUIComponents();
 
             // Sincronizar en segundo plano con Supabase
-            await fetchDataFromSupabase();
+            fetchDataFromSupabase();
             setupRealtimeListeners();
-        });
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initApplication);
+        } else {
+            initApplication();
+        }
 
         async function fetchDataFromSupabase() {
             // Cargar marca y logo guardado en localStorage como respaldo persistente
