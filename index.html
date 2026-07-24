@@ -989,8 +989,15 @@
 
         let isAdminAuthenticated = false;
 
+        const defaultServicesSeed = [
+            { id: 'serv-1', nombre: 'Facial Glow Premium', descripcion: 'Limpieza profunda con punta de diamante, mascarilla hidroplástica de rosas y sueros hidratantes.', duracion: 60, precio: 850.00, activo: true },
+            { id: 'serv-2', nombre: 'Masaje Relajante Pink Lotus', descripcion: 'Masaje de cuerpo completo con aceites esenciales de loto y rosas.', duracion: 60, precio: 900.00, activo: true },
+            { id: 'serv-3', nombre: 'Pedicura Spa Estética', descripcion: 'Cuidado especializado de pies, exfoliación con sales rosas y esmaltado.', duracion: 60, precio: 600.00, activo: true },
+            { id: 'serv-4', nombre: 'Depilación Láser Diodo', descripcion: 'Sesión de depilación médica rápida, indolora y efectiva.', duracion: 30, precio: 450.00, activo: true }
+        ];
+
         // Estado Reactivo Local
-        let services = [];
+        let services = [...defaultServicesSeed];
         let bookings = [];
         let blocks = [];
         let settings = {
@@ -1014,7 +1021,6 @@
         // INICIALIZACIÓN Y SUSCRIPCIÓN EN TIEMPO REAL (SUPABASE)
         // -------------------------------------------------------------
         window.addEventListener('load', async () => {
-            // Ajustar fecha por defecto a hoy
             const today = new Date().toISOString().split('T')[0];
             const dateInput = document.getElementById('booking-date');
             const configBlockDate = document.getElementById('config-block-date');
@@ -1031,18 +1037,26 @@
         });
 
         async function fetchDataFromSupabase() {
+            // Cargar marca y logo guardado en localStorage como respaldo persistente
             try {
-                // Fetch Services
-                const { data: servData, error: errServ } = await dbClient.from('servicios').select('*');
-                if(errServ) throw errServ;
-                if(servData) {
-                    services = servData.map(s => ({...s, duracion: s.duracion_minutos})); // Normalizar
-                }
+                if (localStorage.getItem('skincare_company_name')) settings.companyName = localStorage.getItem('skincare_company_name');
+                if (localStorage.getItem('skincare_slogan')) settings.slogan = localStorage.getItem('skincare_slogan');
+                if (localStorage.getItem('skincare_welcome_msg')) settings.welcomeMsg = localStorage.getItem('skincare_welcome_msg');
+                if (localStorage.getItem('skincare_logo_url')) settings.logoUrl = localStorage.getItem('skincare_logo_url');
+            } catch(e){}
 
-                // Fetch Bookings (Citas)
+            // 1. Cargar Servicios
+            try {
+                const { data: servData, error: errServ } = await dbClient.from('servicios').select('*');
+                if (!errServ && servData && servData.length > 0) {
+                    services = servData.map(s => ({...s, duracion: s.duracion_minutos || s.duracion || 60}));
+                }
+            } catch (e) { console.warn("Aviso al cargar servicios:", e); }
+
+            // 2. Cargar Citas
+            try {
                 const { data: bookData, error: errBook } = await dbClient.from('citas').select('*');
-                if(errBook) throw errBook;
-                if(bookData) {
+                if (!errBook && bookData) {
                     bookings = bookData.map(b => ({
                         id: b.id,
                         serviceId: b.servicio_id,
@@ -1061,11 +1075,12 @@
                         tipoCita: b.tipo_cita
                     }));
                 }
+            } catch (e) { console.warn("Aviso al cargar citas:", e); }
 
-                // Fetch Blocks (Bloqueos)
+            // 3. Cargar Bloqueos
+            try {
                 const { data: blockData, error: errBlock } = await dbClient.from('bloqueos_agenda').select('*');
-                if(errBlock) throw errBlock;
-                if(blockData) {
+                if (!errBlock && blockData) {
                     blocks = blockData.map(b => ({
                         id: b.id,
                         motivo: b.motivo,
@@ -1074,21 +1089,24 @@
                         horaFin: b.hora_fin
                     }));
                 }
+            } catch (e) { console.warn("Aviso al cargar bloqueos:", e); }
 
-                // Fetch Config
+            // 4. Cargar Configuración de Marca
+            try {
                 const { data: configData, error: errConfig } = await dbClient.from('configuracion').select('*').eq('id', 1).single();
-                if(errConfig && errConfig.code !== 'PGRST116') console.warn(errConfig); // Ignore row not found
-                if(configData) {
-                    settings.adminPassword = configData.admin_pin;
+                if (!errConfig && configData) {
+                    if (configData.admin_pin) settings.adminPassword = configData.admin_pin;
                     if (configData.nombre_empresa) settings.companyName = configData.nombre_empresa;
                     if (configData.slogan) settings.slogan = configData.slogan;
                     if (configData.mensaje_bienvenida) settings.welcomeMsg = configData.mensaje_bienvenida;
                     if (configData.logo_url) settings.logoUrl = configData.logo_url;
                 }
+            } catch (e) { console.warn("Aviso al cargar configuracion:", e); }
 
-                // Fetch Cupones
+            // 5. Cargar Cupones
+            try {
                 const { data: coupData, error: errCoup } = await dbClient.from('cupones').select('*');
-                if(!errCoup && coupData) {
+                if (!errCoup && coupData && coupData.length > 0) {
                     dbCoupons = coupData.map(c => ({
                         id: c.id,
                         code: c.codigo,
@@ -1099,10 +1117,12 @@
                         activo: c.activo !== false
                     }));
                 }
+            } catch (e) { console.warn("Aviso al cargar cupones:", e); }
 
+            // 6. Cargar Horarios de Atención
+            try {
                 const { data: horasData, error: errHoras } = await dbClient.from('horarios_atencion').select('*');
-                if(errHoras) throw errHoras;
-                if(horasData && horasData.length > 0) {
+                if (!errHoras && horasData && horasData.length > 0) {
                     settings.operatingDays = horasData.filter(h => h.esta_abierto).map(h => h.dia_semana);
                     const firstOpen = horasData.find(h => h.esta_abierto);
                     if(firstOpen) {
@@ -1110,11 +1130,10 @@
                         settings.closeTime = firstOpen.hora_cierre.substring(0,5);
                     }
                 }
+            } catch (e) { console.warn("Aviso al cargar horarios:", e); }
 
-                updateAllUIComponents();
-            } catch (err) {
-                console.error("Error al cargar datos de Supabase:", err);
-            }
+            // Garantizar SIEMPRE el renderizado total de la interfaz
+            updateAllUIComponents();
         }
 
         function setupRealtimeListeners() {
@@ -1268,19 +1287,40 @@
             const file = event.target.files[0];
             if (!file) return;
 
-            if (file.size > 2 * 1024 * 1024) {
-                showToast('La imagen supera los 2MB. Elige una de menor tamaño.', 'warning');
-                return;
-            }
-
             const reader = new FileReader();
             reader.onload = function(e) {
-                uploadedLogoBase64 = e.target.result;
-                const previewBox = document.getElementById('logo-preview-box');
-                if (previewBox) {
-                    previewBox.innerHTML = `<img src="${uploadedLogoBase64}" class="w-full h-full object-contain">`;
-                }
-                showToast('Imagen cargada. Haz clic en "Guardar Cambios de Perfil" para aplicar.', 'info');
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    const MAX_SIZE = 240; // 240px max avatar size
+                    let width = img.width;
+                    let height = img.height;
+
+                    if (width > height) {
+                        if (width > MAX_SIZE) {
+                            height *= MAX_SIZE / width;
+                            width = MAX_SIZE;
+                        }
+                    } else {
+                        if (height > MAX_SIZE) {
+                            width *= MAX_SIZE / height;
+                            height = MAX_SIZE;
+                        }
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    uploadedLogoBase64 = canvas.toDataURL('image/png', 0.9);
+                    const previewBox = document.getElementById('logo-preview-box');
+                    if (previewBox) {
+                        previewBox.innerHTML = `<img src="${uploadedLogoBase64}" class="w-full h-full object-contain">`;
+                    }
+                    showToast('Imagen cargada y optimizada. Haz clic en "Guardar Cambios de Perfil".', 'info');
+                };
+                img.src = e.target.result;
             };
             reader.readAsDataURL(file);
         };
@@ -1288,20 +1328,11 @@
         window.resetDefaultLogo = function() {
             uploadedLogoBase64 = '';
             settings.logoUrl = '';
+            try { localStorage.removeItem('skincare_logo_url'); } catch(e){}
             const fileInput = document.getElementById('profile-logo-file');
             if (fileInput) fileInput.value = '';
 
-            const previewBox = document.getElementById('logo-preview-box');
-            if (previewBox) {
-                previewBox.innerHTML = `
-                    <svg viewBox="0 0 100 100" class="w-full h-full">
-                        <circle cx="50" cy="50" r="48" fill="#be185d"/>
-                        <circle cx="50" cy="42" rx="21" ry="33" transform="rotate(-15 50 42)" stroke="#ffffff" stroke-width="2.5" fill="none"/>
-                        <path d="M 39,60 C 38,48 41,32 44,23 C 46,19 49,23 50,29 L 53,46 C 53.5,41 51,35 53,33 C 54.5,31.5 56.5,32.5 57,35 C 57.5,37.5 54,41 54,41 L 57,48 C 58,43 61,37 65,44 C 67,48 70,56 74,53" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M 53,35 C 51.5,32.5 48,33.5 49.5,36.5 C 51,39.5 53,41.5 53,41.5 C 53,41.5 55,39.5 56.5,36.5 C 58,33.5 54.5,32.5 53,35 Z" fill="#ffffff" stroke="#ffffff" stroke-width="0.8"/>
-                    </svg>
-                `;
-            }
+            applyProfileBranding();
             showToast('Logo restablecido al predeterminado rosa', 'info');
         };
 
@@ -1379,12 +1410,24 @@
             const companyName = rawCompany || settings.companyName || 'SKINCARE MO';
             const slogan = rawSlogan || settings.slogan || 'Terapia Física, Salud y Bienestar';
             const welcomeMsg = rawMsg || settings.welcomeMsg || 'Tu salud y bienestar merecen la mejor atención.';
-            const finalLogoUrl = uploadedLogoBase64 !== null ? uploadedLogoBase64 : (settings.logoUrl || '');
+            const finalLogoUrl = uploadedLogoBase64 !== null ? uploadedLogoBase64 : (settings.logoUrl || localStorage.getItem('skincare_logo_url') || '');
 
             settings.companyName = companyName;
             settings.slogan = slogan;
             settings.welcomeMsg = welcomeMsg;
             settings.logoUrl = finalLogoUrl;
+
+            // Guardar en localStorage para persistencia instantánea y permanente
+            try {
+                localStorage.setItem('skincare_company_name', companyName);
+                localStorage.setItem('skincare_slogan', slogan);
+                localStorage.setItem('skincare_welcome_msg', welcomeMsg);
+                if (finalLogoUrl) {
+                    localStorage.setItem('skincare_logo_url', finalLogoUrl);
+                } else {
+                    localStorage.removeItem('skincare_logo_url');
+                }
+            } catch(e){}
 
             applyProfileBranding();
 
@@ -1397,10 +1440,10 @@
                     logo_url: finalLogoUrl
                 });
             } catch(err) {
-                console.warn("Error al guardar perfil del spa:", err);
+                console.warn("Aviso al guardar perfil en Supabase:", err);
             }
 
-            showToast('¡Perfil del Spa actualizado con éxito!', 'success');
+            showToast('¡Perfil del Spa e imagen guardados permanentemente!', 'success');
         };
 
         // -------------------------------------------------------------
